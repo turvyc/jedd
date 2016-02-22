@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 public class ColorConverter {
 
-    private static final int N_CHANNELS = 4;
-
     private static final double[][] RGB_TO_YUV_MATRIX = {
         {0.299, 0.587, 0.114},
         {-0.14713, -0.28886, 0.436},
@@ -19,76 +17,52 @@ public class ColorConverter {
         {1, 2.03211, 0}
     };
 
-    public static BufferedImage YUVToRGB(WritableRaster original) {
+    public static PixelBlock YUVToRGB(PixelBlock original) {
+        int[][][] yuvPixels = original.getAllChannels();
+        PixelBlock rgbPixels = new PixelBlock();
 
-        int width = original.getWidth();
-        int height = original.getHeight();
+        for (int i = 0; i < PixelBlock.WIDTH; i++) {
+            for (int j = 0; j < PixelBlock.HEIGHT; j++) {
+                int y = yuvPixels[i][j][PixelBlock.Y];
+                int u = yuvPixels[i][j][PixelBlock.U];
+                int v = yuvPixels[i][j][PixelBlock.V];
 
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                int r = (int) (YUV_TO_RGB_MATRIX[0][0] * y + YUV_TO_RGB_MATRIX[0][1] * u + 
+                    YUV_TO_RGB_MATRIX[0][2] * v);
+                int g = (int) (YUV_TO_RGB_MATRIX[1][0] * y + YUV_TO_RGB_MATRIX[1][1] * u + 
+                    YUV_TO_RGB_MATRIX[1][2] * v);
+                int b = (int) (YUV_TO_RGB_MATRIX[2][0] * y + YUV_TO_RGB_MATRIX[2][1] * u + 
+                    YUV_TO_RGB_MATRIX[2][2] * v);
 
-        int[] ycbcr = new int[N_CHANNELS];
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                ycbcr = original.getPixel(i, j, ycbcr);
-                int y = ycbcr[0];
-                int cb = ycbcr[1];
-                int cr = ycbcr[2];
-
-                System.out.printf("%d %d %d\n", y, cb, cr);
-                int r = (int) (YUV_TO_RGB_MATRIX[0][0] * y + YUV_TO_RGB_MATRIX[0][1] * cb + 
-                    YUV_TO_RGB_MATRIX[0][2] * cr);
-                int g = (int) (YUV_TO_RGB_MATRIX[1][0] * y + YUV_TO_RGB_MATRIX[1][1] * cb + 
-                    YUV_TO_RGB_MATRIX[1][2] * cr);
-                int b = (int) (YUV_TO_RGB_MATRIX[2][0] * y + YUV_TO_RGB_MATRIX[2][1] * cb + 
-                    YUV_TO_RGB_MATRIX[2][2] * cr);
-
-                System.out.printf("%d %d %d\n", r, g, b);
-                int rgb = new Color(r, g, b).getRGB();
-
-                image.setRGB(i, j, rgb);
+                int[] rgb = {r, g, b};
+                rgbPixels.setPixel(i, j, rgb);
             }
         }
 
-        return image;
+        return rgbPixels;
     }
 
-    public static WritableRaster RGBToYUV(BufferedImage original) {
+    public static PixelBlock RGBToYUV(PixelBlock original) {
+        int[][][] rgbPixels = original.getAllChannels();
+        PixelBlock yuvPixels = new PixelBlock();
 
-        int width = original.getWidth();
-        int height = original.getHeight();
-
-        // Copy the original image into a new one
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                image.setRGB(i, j, original.getRGB(i, j));
-            }
-        }
-
-        WritableRaster raster = image.getRaster();
-
-        int[] rgb = new int[N_CHANNELS];
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                rgb = raster.getPixel(i, j, rgb);
-                int r = rgb[0];
-                int g = rgb[1];
-                int b = rgb[2];
+        for (int i = 0; i < PixelBlock.WIDTH; i++) {
+            for (int j = 0; j < PixelBlock.HEIGHT; j++) {
+                int r = rgbPixels[i][j][PixelBlock.R];
+                int g = rgbPixels[i][j][PixelBlock.G];
+                int b = rgbPixels[i][j][PixelBlock.B];
 
                 int y = (int) (RGB_TO_YUV_MATRIX[0][0] * r + RGB_TO_YUV_MATRIX[0][1] * g + 
                     RGB_TO_YUV_MATRIX[0][2] * b);
-                int cb = (int) (RGB_TO_YUV_MATRIX[1][0] * r + RGB_TO_YUV_MATRIX[1][1] * g + 
+                int u = (int) (RGB_TO_YUV_MATRIX[1][0] * r + RGB_TO_YUV_MATRIX[1][1] * g + 
                     RGB_TO_YUV_MATRIX[1][2] * b);
-                int cr = (int) (RGB_TO_YUV_MATRIX[2][0] * r + RGB_TO_YUV_MATRIX[2][1] * g + 
+                int v = (int) (RGB_TO_YUV_MATRIX[2][0] * r + RGB_TO_YUV_MATRIX[2][1] * g + 
                     RGB_TO_YUV_MATRIX[2][2] * b);
 
-                int[] ycbcr = {y, cb, cr, 0};
-                raster.setPixel(i, j, ycbcr);
+                int[] yuv = {y, u, v};
+                yuvPixels.setPixel(i, j, yuv);
             }
         }
-
-        return raster;
+        return yuvPixels;
     }
 }

@@ -12,7 +12,7 @@ public class JeddController {
     private JeddFrame frame;
     private JeddModel model;
 
-    public static final int IMAGE_WIDTH = 500;
+    public static final int IMAGE_WIDTH = 5;
 
     public JeddController(JeddFrame f, JeddModel m) {
         frame = f;
@@ -45,8 +45,8 @@ public class JeddController {
                 // Set the image in the frame and model
                 frame.setImage(buff);
                 model.setImage(buff);
-                frame.updateChannels(model.getRedChannel(), model.getGreenChannel(),
-                        model.getBlueChannel());
+                frame.updateChannels(model.getYChannel(), model.getCbChannel(),
+                        model.getCrChannel());
             }
             catch (IOException e) {}
         }

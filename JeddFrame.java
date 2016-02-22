@@ -17,11 +17,13 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Observer;
 
 public class JeddFrame extends JFrame {
 
     private final int FRAME_HEIGHT = 800;
-    private final int FRAME_WIDTH = 1024;
+    private final int FRAME_WIDTH = 2048;
     private final String FRAME_TITLE = "Jedd";
 
     public static String OPEN_BUTTON = "Open image";
@@ -43,11 +45,12 @@ public class JeddFrame extends JFrame {
     private PixelBlockLabel subsampleLabel;
     private PixelBlockLabel dctLabel;
     private PixelBlockLabel qtLabel;
-    private PixelBlockLabel finalLabel;
+    private PixelBlockLabel quantizedLabel;
 
     public JeddFrame() {
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setTitle(FRAME_TITLE);
+        setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         // The listeners are internal classes, at bottom of class
         actionListener = new JeddActionListener();
@@ -58,6 +61,7 @@ public class JeddFrame extends JFrame {
         JPanel masterPanel = new JPanel();
 
         masterPanel.add(originalImagePanel);
+        masterPanel.add(pixelBlocksPanel);
 
         add(masterPanel);
     }
@@ -95,6 +99,10 @@ public class JeddFrame extends JFrame {
         // Set the icon
         imageLabel.setIcon(new ImageIcon(clone));
     }
+    
+    public void updateRGBLabel(PixelBlock pb) {
+        rgbLabel.setPixelBlock(pb);
+    }
 
     private JPanel createOriginalImagePanel() {
         JPanel panel = new JPanel();
@@ -117,23 +125,34 @@ public class JeddFrame extends JFrame {
         final int PAD= 5;
         JPanel panel = new JPanel(new GridLayout(ROWS, COLS, PAD, PAD));
 
-        rgbLabel = new PixelBlockLabel("RGB", true);
-        yuvLabel = new PixelBlockLabel("YUV", true);
-        subsampleLabel = new PixelBlockLabel("Subsample", true);
-        dctLabel = new PixelBlockLabel("DCT", false);
-        qtLabel = new PixelBlockLabel("Quantization Table", false);
-        finalLabel = new PixelBlockLabel("Quantized", false);
+        rgbLabel = new PixelBlockLabel("RGB", PixelBlockLabel.TYPE_RGB);
+        yuvLabel = new PixelBlockLabel("YUV", PixelBlockLabel.TYPE_YUV);
+        subsampleLabel = new PixelBlockLabel("Subsample", PixelBlockLabel.TYPE_SUB);
+        dctLabel = new PixelBlockLabel("DCT", PixelBlockLabel.TYPE_DCT);
+        qtLabel = new PixelBlockLabel("Quantization Table", PixelBlockLabel.TYPE_QT);
+        quantizedLabel = new PixelBlockLabel("Quantized", PixelBlockLabel.TYPE_QTD);
 
         panel.add(rgbLabel);
         panel.add(yuvLabel);
         panel.add(subsampleLabel);
         panel.add(dctLabel);
         panel.add(qtLabel);
-        panel.add(finalLabel);
+        panel.add(quantizedLabel);
 
         return panel;
     }
 
+    public ArrayList<Observer> getObservers() {
+        ArrayList<Observer> labels = new ArrayList<Observer>();
+        labels.add(rgbLabel);
+        labels.add(yuvLabel);
+        labels.add(subsampleLabel);
+        labels.add(dctLabel);
+        labels.add(qtLabel);
+        labels.add(quantizedLabel);
+        return labels;
+    }
+        
     public class JeddActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {

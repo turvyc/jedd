@@ -1,17 +1,19 @@
-import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
 import java.lang.InterruptedException;
 import java.util.ArrayList;
+import java.util.Observable;
 
-public class JeddModel {
+public class JeddModel extends Observable {
 
     private BufferedImage image;
     private QuantizationTable table;
-    private PixelBlock pixelBlock;
+
+    private PixelBlock rgbBlock;
+    private PixelBlock yuvBlock;
+    private PixelBlock subsampleBlock;
+    private PixelBlock dctBlock;
+    private PixelBlock quantizedBlock;
 
     public JeddModel() {
         table = new QuantizationTable();
@@ -49,6 +51,12 @@ public class JeddModel {
             e.printStackTrace();
         }
 
-        pixelBlock = new PixelBlock(pixels);
+        rgbBlock = new PixelBlock(pixels);
+        setChanged();
+        notifyObservers();
+    }
+
+    public PixelBlock getRgbBlock() {
+        return rgbBlock;
     }
 }

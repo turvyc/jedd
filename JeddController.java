@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Observer;
 
 public class JeddController {
 
@@ -18,6 +19,10 @@ public class JeddController {
         frame = f;
         model = m;
         frame.addController(this);
+        
+        // Add the observers to the model
+        for (Observer o : frame.getObservers())
+            model.addObserver(o);
     }
 
     public void openImage() {

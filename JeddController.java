@@ -12,7 +12,7 @@ public class JeddController {
     private JeddFrame frame;
     private JeddModel model;
 
-    public static final int IMAGE_WIDTH = 5;
+    public static final int IMAGE_WIDTH = 512;
 
     public JeddController(JeddFrame f, JeddModel m) {
         frame = f;
@@ -33,7 +33,7 @@ public class JeddController {
                 Image img = image.getScaledInstance(
                         IMAGE_WIDTH, -1, Image.SCALE_FAST);
 
-                // Paint it back into the more-convenient BufferedImage
+                // Paint the Image into the more-convenient BufferedImage
                 int width = img.getWidth(null);
                 int height = img.getHeight(null);
                 BufferedImage buff = new BufferedImage(width, height, 
@@ -45,19 +45,24 @@ public class JeddController {
                 // Set the image in the frame and model
                 frame.setImage(buff);
                 model.setImage(buff);
-                frame.updateChannels(model.getYChannel(), model.getCbChannel(),
-                        model.getCrChannel());
             }
             catch (IOException e) {}
         }
     }
 
-    public void selectEntireImage() {
-        System.out.println("Select entire image");
-    }
-
     public void selectPixelBlock(int x, int y) {
-        frame.drawPixelBlock(x, y, JeddModel.BLOCK_WIDTH, JeddModel.BLOCK_HEIGHT);
+        int width = model.getImageWidth();
+        int height = model.getImageHeight();
+
+        // If the user clicked too close to the border, adjust x and y so we
+        // still get a full-sized block
+        if (x > width - PixelBlock.WIDTH) 
+            x = width - PixelBlock.WIDTH;
+        
+        if (y > height - PixelBlock.HEIGHT) 
+            y = height - PixelBlock.HEIGHT;
+
+        frame.drawPixelBlock(x, y);
         model.setPixelBlock(x, y);
     }
 }

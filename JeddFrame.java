@@ -24,26 +24,27 @@ public class JeddFrame extends JFrame {
     private final String FRAME_TITLE = "Jedd";
 
     public static String OPEN_BUTTON = "Open image";
+    public static String UPDATE_BUTTON = "Update";
 
     private JeddController controller;
     private JeddActionListener actionListener;
     private JeddMouseListener mouseListener;
 
     private BufferedImage originalImage;
+    private JLabel imageLabel;
 
     public JeddFrame() {
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setTitle(FRAME_TITLE);
 
+        // The listeners are internal classes, at bottom of class
         actionListener = new JeddActionListener();
         mouseListener = new JeddMouseListener();
 
         JPanel originalImagePanel = createOriginalImagePanel();
-
         JPanel masterPanel = new JPanel();
 
         masterPanel.add(originalImagePanel);
-        masterPanel.add(colorChannelPanel);
 
         add(masterPanel);
     }
@@ -62,7 +63,11 @@ public class JeddFrame extends JFrame {
     /**
      * Draws a border around the selected pixel block on the original image.
      */
-    public void drawPixelBlock(int x, int y, int width, int height) {
+    public void drawPixelBlock(int x, int y) {
+        // Expand the size so the border encloses the pixels, not cover them
+        int width = PixelBlock.WIDTH + 2;
+        int height = PixelBlock.HEIGHT + 2;
+
         // Copy the original image 
         BufferedImage clone = new BufferedImage(originalImage.getWidth(),
                 originalImage.getHeight(), originalImage.getType());
@@ -71,7 +76,7 @@ public class JeddFrame extends JFrame {
 
         // Draw the pixel block. The x, y, width, and height offsets
         // are because we want to enclose the pixel block.
-        g2.draw(new Rectangle(x - 1, y - 1, width + 2, height + 2));
+        g2.draw(new Rectangle(x - 1, y - 1, width, height));
         g2.dispose();
 
         // Set the icon

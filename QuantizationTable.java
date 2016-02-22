@@ -33,8 +33,8 @@ public class QuantizationTable {
     }
 
     public void setConstant(int c) {
-        for (int i = 0; i < Model.BLOCK_HEIGHT; i++) {
-            for (int j = 0; j < Model.BLOCK_WIDTH; j++)
+        for (int i = 0; i < PixelBlock.WIDTH; i++) {
+            for (int j = 0; j < PixelBlock.HEIGHT; j++)
                 values[i][j] = c;
         }
     }

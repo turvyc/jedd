@@ -1,8 +1,10 @@
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.lang.InterruptedException;
 import java.util.ArrayList;
 
 public class JeddModel {
@@ -32,9 +34,21 @@ public class JeddModel {
     }
 
     public void setPixelBlock(int x, int y) {
-        /*
-        pixelBlock = image.getData(new Rectangle(x, y,
-                    PixelBlock.WIDTH, PixelBlock.HEIGHT));
-                    */
+        int width = PixelBlock.WIDTH;
+        int height = PixelBlock.HEIGHT;
+
+        int[] pixels = new int[width * height];
+
+        PixelGrabber grabber = new PixelGrabber(image, x, y, width, height,
+                pixels, 0, width);
+
+        try {
+            grabber.grabPixels();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pixelBlock = new PixelBlock(pixels);
     }
 }

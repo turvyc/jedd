@@ -22,6 +22,22 @@ public class PixelBlock {
         channel3 = new int[WIDTH][HEIGHT];
     }
 
+    public PixelBlock(int[] pixels) {
+        this();
+        assert (pixels.length == WIDTH * HEIGHT);
+        int[] rgb = new int[N_CHANNELS];
+        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+            rgb[R] = (pixels[i] >> 16) & 0xff;
+            rgb[G] = (pixels[i] >> 8) & 0xff;
+            rgb[B] = pixels[i] & 0xff;
+
+            int w = i / WIDTH;
+            int h = i - w * WIDTH;
+
+            setPixel(w, h, rgb);
+        }
+    }
+
     public void setPixel(int w, int h, int[] pixels) {
         assert pixels.length == N_CHANNELS;
         channel1[w][h] = pixels[0];

@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
@@ -33,6 +34,17 @@ public class JeddFrame extends JFrame {
     private BufferedImage originalImage;
     private JLabel imageLabel;
 
+    private JPanel originalImagePanel;
+    private JPanel pixelBlocksPanel;
+    private JPanel newImagePanel;
+
+    private PixelBlockLabel rgbLabel;
+    private PixelBlockLabel yuvLabel;
+    private PixelBlockLabel subsampleLabel;
+    private PixelBlockLabel dctLabel;
+    private PixelBlockLabel qtLabel;
+    private PixelBlockLabel finalLabel;
+
     public JeddFrame() {
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setTitle(FRAME_TITLE);
@@ -41,7 +53,8 @@ public class JeddFrame extends JFrame {
         actionListener = new JeddActionListener();
         mouseListener = new JeddMouseListener();
 
-        JPanel originalImagePanel = createOriginalImagePanel();
+        originalImagePanel = createOriginalImagePanel();
+        pixelBlocksPanel = createPixelBlocksPanel();
         JPanel masterPanel = new JPanel();
 
         masterPanel.add(originalImagePanel);
@@ -95,6 +108,29 @@ public class JeddFrame extends JFrame {
 
         panel.add(imageLabel);
         panel.add(openImageButton);
+        return panel;
+    }
+
+    private JPanel createPixelBlocksPanel() {
+        final int ROWS = 2;
+        final int COLS = 3;
+        final int PAD= 5;
+        JPanel panel = new JPanel(new GridLayout(ROWS, COLS, PAD, PAD));
+
+        rgbLabel = new PixelBlockLabel("RGB", true);
+        yuvLabel = new PixelBlockLabel("YUV", true);
+        subsampleLabel = new PixelBlockLabel("Subsample", true);
+        dctLabel = new PixelBlockLabel("DCT", false);
+        qtLabel = new PixelBlockLabel("Quantization Table", false);
+        finalLabel = new PixelBlockLabel("Quantized", false);
+
+        panel.add(rgbLabel);
+        panel.add(yuvLabel);
+        panel.add(subsampleLabel);
+        panel.add(dctLabel);
+        panel.add(qtLabel);
+        panel.add(finalLabel);
+
         return panel;
     }
 

@@ -28,6 +28,8 @@ public class PixelBlockLabel extends JLabel implements Observer {
         switch (type) {
             case TYPE_RGB: setPixelBlock(model.getRgbBlock());
                            break;
+            case TYPE_YUV: setPixelBlock(model.getYuvBlock());
+                           break;
         }
     }
 

@@ -52,11 +52,17 @@ public class JeddModel extends Observable {
         }
 
         rgbBlock = new PixelBlock(pixels);
+        yuvBlock = ColorConverter.RGBtoYUV(rgbBlock);
+
         setChanged();
         notifyObservers();
     }
 
     public PixelBlock getRgbBlock() {
         return rgbBlock;
+    }
+
+    public PixelBlock getYuvBlock() {
+        return yuvBlock;
     }
 }

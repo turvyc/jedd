@@ -17,7 +17,7 @@ public class ColorConverter {
         {1, 2.03211, 0}
     };
 
-    public static PixelBlock YUVToRGB(PixelBlock original) {
+    public static PixelBlock YUVtoRGB(PixelBlock original) {
         int[][][] yuvPixels = original.getAllChannels();
         PixelBlock rgbPixels = new PixelBlock();
 
@@ -42,7 +42,7 @@ public class ColorConverter {
         return rgbPixels;
     }
 
-    public static PixelBlock RGBToYUV(PixelBlock original) {
+    public static PixelBlock RGBtoYUV(PixelBlock original) {
         int[][][] rgbPixels = original.getAllChannels();
         PixelBlock yuvPixels = new PixelBlock();
 

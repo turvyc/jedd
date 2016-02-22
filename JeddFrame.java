@@ -24,21 +24,12 @@ public class JeddFrame extends JFrame {
     private final String FRAME_TITLE = "Jedd";
 
     public static String OPEN_BUTTON = "Open image";
-    public static String SELECT_BUTTON = "Select entire image";
 
     private JeddController controller;
     private JeddActionListener actionListener;
     private JeddMouseListener mouseListener;
 
     private BufferedImage originalImage;
-
-    private JLabel imageLabel;
-    private JLabel rChannelLabel;
-    private JLabel gChannelLabel;
-    private JLabel bChannelLabel;
-    private JLabel yChannelLabel;
-    private JLabel uChannelLabel;
-    private JLabel vChannelLabel;
 
     public JeddFrame() {
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -48,10 +39,6 @@ public class JeddFrame extends JFrame {
         mouseListener = new JeddMouseListener();
 
         JPanel originalImagePanel = createOriginalImagePanel();
-        JPanel colorChannelPanel = createColorChannelPanel();
-        JPanel pixelBlockPanel = createPixelBlockPanel();
-        JPanel decodedYUVPanel = createDecodedYUVPanel();
-        JPanel decodedImagePanel = createDecodedImagePanel();
 
         JPanel masterPanel = new JPanel();
 
@@ -91,13 +78,6 @@ public class JeddFrame extends JFrame {
         imageLabel.setIcon(new ImageIcon(clone));
     }
 
-    public void updateChannels(BufferedImage redChannel,
-            BufferedImage greenChannel, BufferedImage blueChannel) {
-        rChannelLabel.setIcon(new ImageIcon(redChannel));
-        gChannelLabel.setIcon(new ImageIcon(greenChannel));
-        bChannelLabel.setIcon(new ImageIcon(blueChannel));
-    }
-
     private JPanel createOriginalImagePanel() {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(
@@ -105,49 +85,11 @@ public class JeddFrame extends JFrame {
         imageLabel = new JLabel();
 
         JButton openImageButton = new JButton(OPEN_BUTTON);
-        JButton selectEntireImageButton = new JButton(SELECT_BUTTON);
 
         openImageButton.addActionListener(actionListener);
-        selectEntireImageButton.addActionListener(actionListener);
 
         panel.add(imageLabel);
         panel.add(openImageButton);
-        panel.add(selectEntireImageButton);
-        return panel;
-    }
-
-    private JPanel createColorChannelPanel() {
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder(
-                    new EtchedBorder(), "Original Color Channels"));
-        rChannelLabel = new JLabel();
-        gChannelLabel = new JLabel();
-        bChannelLabel = new JLabel();
-
-        panel.add(rChannelLabel);
-        panel.add(gChannelLabel);
-        panel.add(bChannelLabel);
-        return panel;
-    }
-
-    private JPanel createPixelBlockPanel() {
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder(
-                    new EtchedBorder(), "Pixel Block"));
-        return panel;
-    }
-
-    private JPanel createDecodedYUVPanel() {
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder(
-                    new EtchedBorder(), "Decoded YUV"));
-        return panel;
-    }
-
-    private JPanel createDecodedImagePanel() {
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder(
-                    new EtchedBorder(), "Decoded Image"));
         return panel;
     }
 
@@ -158,10 +100,6 @@ public class JeddFrame extends JFrame {
 
             if (command.equals(JeddFrame.OPEN_BUTTON)) {
                 controller.openImage();
-            }
-
-            else if (command.equals(JeddFrame.SELECT_BUTTON)) {
-                controller.selectEntireImage();
             }
         }
     }

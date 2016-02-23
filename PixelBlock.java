@@ -49,15 +49,15 @@ public class PixelBlock {
         channel3[w][h] = channels[2];
     }
 
-    public int[][] getChannel1() {
+    public int[][] getYChannel() {
         return channel1;
     }
 
-    public int[][] getChannel2() {
+    public int[][] getUChannel() {
         return channel2;
     }
 
-    public int[][] getChannel3() {
+    public int[][] getVChannel() {
         return channel3;
     }
 
@@ -72,5 +72,14 @@ public class PixelBlock {
         }
         return allChannels;
     }
+
+    public void setChannel(int channel, int[][] vals) {
+        switch (channel) {
+            case Y: channel1 = vals; break;
+            case U: channel2 = vals; break;
+            case V: channel3 = vals; break;
+        }
+    }
+
 }
 

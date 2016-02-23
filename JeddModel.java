@@ -7,6 +7,7 @@ import java.util.Observable;
 public class JeddModel extends Observable {
 
     private BufferedImage image;
+    private ChromaSubsampler subsampler;
     private QuantizationTable table;
 
     private PixelBlock rgbBlock;
@@ -17,6 +18,7 @@ public class JeddModel extends Observable {
 
     public JeddModel() {
         table = new QuantizationTable();
+        subsampler = new ChromaSubsampler();
     }
 
     public void setImage(BufferedImage img) {
@@ -53,6 +55,7 @@ public class JeddModel extends Observable {
 
         rgbBlock = new PixelBlock(pixels);
         yuvBlock = ColorConverter.RGBtoYUV(rgbBlock);
+        subsampleBlock = subsampler.subsample(yuvBlock);
 
         setChanged();
         notifyObservers();
@@ -64,5 +67,9 @@ public class JeddModel extends Observable {
 
     public PixelBlock getYuvBlock() {
         return yuvBlock;
+    }
+
+    public PixelBlock getSubsampleBlock() {
+        return subsampleBlock;
     }
 }

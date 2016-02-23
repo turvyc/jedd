@@ -32,6 +32,8 @@ public class PixelBlockLabel extends JLabel implements Observer {
                            break;
             case TYPE_SUB: setPixelBlock(model.getSubsampleBlock());
                            break;
+            case TYPE_DCT: setPixelBlock(model.getDctBlock());
+                           break;
         }
     }
 

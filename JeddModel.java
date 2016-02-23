@@ -56,6 +56,7 @@ public class JeddModel extends Observable {
         rgbBlock = new PixelBlock(pixels);
         yuvBlock = ColorConverter.RGBtoYUV(rgbBlock);
         subsampleBlock = subsampler.subsample(yuvBlock);
+        dctBlock = DCT.dct(subsampleBlock);
 
         setChanged();
         notifyObservers();
@@ -71,5 +72,9 @@ public class JeddModel extends Observable {
 
     public PixelBlock getSubsampleBlock() {
         return subsampleBlock;
+    }
+
+    public PixelBlock getDctBlock() {
+        return dctBlock;
     }
 }

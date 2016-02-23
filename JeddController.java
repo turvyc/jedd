@@ -13,6 +13,7 @@ public class JeddController {
     private JeddFrame frame;
     private JeddModel model;
 
+    // Chosen to be a nice round multiple of 8
     public static final int IMAGE_WIDTH = 512;
 
     public JeddController(JeddFrame f, JeddModel m) {
@@ -34,7 +35,7 @@ public class JeddController {
             try {
                 BufferedImage image = ImageIO.read(chooser.getSelectedFile());
 
-                // Scale the image. -1 is used to maintain aspect ratio
+                // Scale the image to 512 pixel width. -1 is used to maintain aspect ratio
                 Image img = image.getScaledInstance(
                         IMAGE_WIDTH, -1, Image.SCALE_FAST);
 
@@ -47,9 +48,13 @@ public class JeddController {
                 g2.drawImage(img, 0, 0, null);
                 g2.dispose();
 
+                // Trim pixels off the bottom so it is a nice multiple of 8
+                int trimSize = buff.getHeight() % PixelBlock.HEIGHT;
+                BufferedImage trimmed = buff.getSubimage(0, 0, buff.getWidth(), buff.getHeight() - trimSize);
                 // Set the image in the frame and model
-                frame.setImage(buff);
-                model.setImage(buff);
+                frame.setImage(trimmed);
+                model.setImage(trimmed);
+                System.out.printf("%d, %d\n", trimmed.getWidth(), trimmed.getHeight());
             }
             catch (IOException e) {}
         }

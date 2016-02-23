@@ -1,7 +1,7 @@
 public class PixelBlock {
 
-    public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
+    public static final int WIDTH = 8;
     public static final int N_CHANNELS = 3;
 
     public static final int Y = 0;
@@ -12,14 +12,14 @@ public class PixelBlock {
     public static final int G = 1;
     public static final int B = 2;
 
-    private int[][] channel1;
-    private int[][] channel2;
-    private int[][] channel3;
+    protected int[][] channel1;
+    protected int[][] channel2;
+    protected int[][] channel3;
 
     public PixelBlock() {
-        channel1 = new int[WIDTH][HEIGHT];
-        channel2 = new int[WIDTH][HEIGHT];
-        channel3 = new int[WIDTH][HEIGHT];
+        channel1 = new int[HEIGHT][WIDTH];
+        channel2 = new int[HEIGHT][WIDTH];
+        channel3 = new int[HEIGHT][WIDTH];
     }
 
     public PixelBlock(int[] pixels) {
@@ -28,9 +28,9 @@ public class PixelBlock {
     }
 
     public void updatePixels(int[] pixels) {
-        assert (pixels.length == WIDTH * HEIGHT);
+        assert (pixels.length == HEIGHT * WIDTH);
         int[] rgb = new int[N_CHANNELS];
-        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        for (int i = 0; i < HEIGHT * WIDTH; i++) {
             rgb[R] = (pixels[i] >> 16) & 0xff;
             rgb[G] = (pixels[i] >> 8) & 0xff;
             rgb[B] = pixels[i] & 0xff;
@@ -42,7 +42,7 @@ public class PixelBlock {
         }
     }
 
-    public void setPixel(int w, int h, int[] channels) {
+    public void setPixel(int h, int w, int[] channels) {
         assert channels.length == N_CHANNELS;
         channel1[w][h] = channels[0];
         channel2[w][h] = channels[1];
@@ -62,9 +62,9 @@ public class PixelBlock {
     }
 
     public int[][][] getAllChannels() {
-        int[][][] allChannels = new int[WIDTH][HEIGHT][N_CHANNELS];
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
+        int[][][] allChannels = new int[HEIGHT][WIDTH][N_CHANNELS];
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
                 allChannels[i][j][R] = channel1[i][j];
                 allChannels[i][j][G] = channel2[i][j];
                 allChannels[i][j][B] = channel3[i][j];

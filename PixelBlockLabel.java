@@ -34,6 +34,10 @@ public class PixelBlockLabel extends JLabel implements Observer {
                            break;
             case TYPE_DCT: setPixelBlock(model.getDctBlock());
                            break;
+            case TYPE_QT: setPixelBlock(model.getQuantizationTable());
+                           break;
+            case TYPE_QTD: setPixelBlock(model.getQuantizedBlock());
+                           break;
         }
     }
 
@@ -45,12 +49,8 @@ public class PixelBlockLabel extends JLabel implements Observer {
             text += "<tr>";
             for (int j = 0; j < PixelBlock.HEIGHT; j++) {
                 text += "<td align='center'>";
-                if (type == TYPE_RGB || type == TYPE_YUV || type == TYPE_SUB) {
-                    text += String.format("%d,%d,%d", vals[i][j][0],
-                            vals[i][j][1], vals[i][j][2]);
-                }
-                else // Display only the first channel (Y or R).
-                    text += vals[i][j][0];
+                text += String.format("%d,%d,%d", vals[i][j][0],
+                        vals[i][j][1], vals[i][j][2]);
                 text += "</td>";
             }
             text += "</tr>";

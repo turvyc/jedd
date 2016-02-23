@@ -8,7 +8,7 @@ public class JeddModel extends Observable {
 
     private BufferedImage image;
     private ChromaSubsampler subsampler;
-    private QuantizationTable table;
+    private QuantizationTable qt;
 
     private PixelBlock rgbBlock;
     private PixelBlock yuvBlock;
@@ -17,8 +17,8 @@ public class JeddModel extends Observable {
     private PixelBlock quantizedBlock;
 
     public JeddModel() {
-        table = new QuantizationTable();
         subsampler = new ChromaSubsampler();
+        qt = new QuantizationTable();
     }
 
     public void setImage(BufferedImage img) {
@@ -57,6 +57,7 @@ public class JeddModel extends Observable {
         yuvBlock = ColorConverter.RGBtoYUV(rgbBlock);
         subsampleBlock = subsampler.subsample(yuvBlock);
         dctBlock = DCT.dct(subsampleBlock);
+        quantizedBlock = Quantizer.quantize(dctBlock, qt);
 
         setChanged();
         notifyObservers();
@@ -76,5 +77,13 @@ public class JeddModel extends Observable {
 
     public PixelBlock getDctBlock() {
         return dctBlock;
+    }
+
+    public QuantizationTable getQuantizationTable() {
+        return qt;
+    }
+
+    public PixelBlock getQuantizedBlock() {
+        return quantizedBlock;
     }
 }

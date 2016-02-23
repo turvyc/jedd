@@ -1,6 +1,9 @@
-public class QuantizationTable {
-
-    private int[][] values;
+/**
+ * Represents a quantization table. 
+ * This is just a special case of a PixelBlock. Channel 1 is the luminance
+ * QT, and channels 2 and 3 are the chrominance QTs. 
+ */
+public class QuantizationTable extends PixelBlock {
 
     private final int[][] DEFAULT_LUMINANCE = {
         {16, 11, 10, 16, 24, 40, 51, 61},
@@ -25,25 +28,25 @@ public class QuantizationTable {
     };
 
     public QuantizationTable() {
-        setDefaultLuminance();
-    }
-
-    public int[][] getTable() {
-        return values;
+        super();
+        channel1 = DEFAULT_LUMINANCE;
+        channel2 = DEFAULT_CHROMINANCE;
+        channel3 = DEFAULT_CHROMINANCE;
     }
 
     public void setConstant(int c) {
         for (int i = 0; i < PixelBlock.WIDTH; i++) {
             for (int j = 0; j < PixelBlock.HEIGHT; j++)
-                values[i][j] = c;
+                channel1[i][j] = c;
         }
     }
 
-    public void setDefaultLuminance() {
-        values = DEFAULT_LUMINANCE;
+    public void setLuminance(int[][] vals) {
+        channel1 = vals;
     }
 
-    public void setDefaultChrominance() {
-        values = DEFAULT_CHROMINANCE;
+    public void setChrominance(int [][] vals) {
+        channel2 = vals;
+        channel3 = vals;
     }
 }

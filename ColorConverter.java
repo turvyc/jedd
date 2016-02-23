@@ -21,8 +21,8 @@ public class ColorConverter {
         int[][][] yuvPixels = original.getAllChannels();
         PixelBlock rgbPixels = new PixelBlock();
 
-        for (int i = 0; i < PixelBlock.WIDTH; i++) {
-            for (int j = 0; j < PixelBlock.HEIGHT; j++) {
+        for (int i = 0; i < PixelBlock.HEIGHT; i++) {
+            for (int j = 0; j < PixelBlock.WIDTH; j++) {
                 int y = yuvPixels[i][j][PixelBlock.Y];
                 int u = yuvPixels[i][j][PixelBlock.U];
                 int v = yuvPixels[i][j][PixelBlock.V];
@@ -46,8 +46,8 @@ public class ColorConverter {
         int[][][] rgbPixels = original.getAllChannels();
         PixelBlock yuvPixels = new PixelBlock();
 
-        for (int i = 0; i < PixelBlock.WIDTH; i++) {
-            for (int j = 0; j < PixelBlock.HEIGHT; j++) {
+        for (int i = 0; i < PixelBlock.HEIGHT; i++) {
+            for (int j = 0; j < PixelBlock.WIDTH; j++) {
                 int r = rgbPixels[i][j][PixelBlock.R];
                 int g = rgbPixels[i][j][PixelBlock.G];
                 int b = rgbPixels[i][j][PixelBlock.B];

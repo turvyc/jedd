@@ -73,6 +73,6 @@ public class JeddController {
             y = height - PixelBlock.HEIGHT;
 
         frame.drawPixelBlock(x, y);
-        model.setPixelBlock(x, y);
+        model.setPixelBlocks(x, y);
     }
 }

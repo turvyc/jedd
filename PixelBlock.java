@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class PixelBlock {
 
     public static final int HEIGHT = 8;
@@ -22,12 +24,7 @@ public class PixelBlock {
         channel3 = new int[HEIGHT][WIDTH];
     }
 
-    public PixelBlock(int[] pixels) {
-        this();
-        updatePixels(pixels);
-    }
-
-    public void updatePixels(int[] pixels) {
+    public void loadRGB(int[] pixels) {
         assert (pixels.length == HEIGHT * WIDTH);
         int[] rgb = new int[N_CHANNELS];
         for (int i = 0; i < HEIGHT * WIDTH; i++) {
@@ -44,10 +41,24 @@ public class PixelBlock {
 
     public void setPixel(int h, int w, int[] channels) {
         assert channels.length == N_CHANNELS;
-        channel1[w][h] = channels[0];
-        channel2[w][h] = channels[1];
-        channel3[w][h] = channels[2];
+        channel1[h][w] = channels[0];
+        channel2[h][w] = channels[1];
+        channel3[h][w] = channels[2];
     }
+
+    public int[] getRgbArray() {
+        int[] rgb = new int[HEIGHT * WIDTH];
+
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                Color c = new Color(channel1[i][j], channel2[i][j], channel3[i][j]);
+                rgb[i + j] = c.getRGB();
+            }
+        }
+        
+        return rgb;
+    }
+
 
     public int[][] getYChannel() {
         return channel1;

@@ -1,11 +1,18 @@
 import java.awt.Color;
 
+/**
+ * Represents a block of pixels.
+ */
 public class PixelBlock {
 
+    // Size of the pixel block
     public static final int HEIGHT = 8;
     public static final int WIDTH = 8;
+
+    // The number of color channels
     public static final int N_CHANNELS = 3;
 
+    // Color channel constants
     public static final int Y = 0;
     public static final int U = 1;
     public static final int V = 2;
@@ -14,6 +21,7 @@ public class PixelBlock {
     public static final int G = 1;
     public static final int B = 2;
 
+    // The three color channels
     protected double[][] channel1;
     protected double[][] channel2;
     protected double[][] channel3;
@@ -24,8 +32,14 @@ public class PixelBlock {
         channel3 = new double[HEIGHT][WIDTH];
     }
 
+    /**
+     * Loads RGB pixels (represented as a single integer in Java) into 
+     * the pixel block.
+     */
     public void loadRGB(int[] pixels) {
         assert (pixels.length == HEIGHT * WIDTH);
+
+        // Seperate each pixel into individual channels
         double[] rgb = new double[N_CHANNELS];
         for (int i = 0; i < HEIGHT * WIDTH; i++) {
             Color c = new Color(pixels[i]);
@@ -33,13 +47,18 @@ public class PixelBlock {
             rgb[G] = (double) c.getGreen();
             rgb[B] = (double) c.getBlue();
 
+            // Calculate the spot in the 2d array
             int w = i / WIDTH;
             int h = i - w * WIDTH;
 
+            // Set the pixel in the pixel block
             setPixel(w, h, rgb);
         }
     }
 
+    /**
+     * Sets the three channels of a single pixel in the block.
+     */
     public void setPixel(int h, int w, double[] channels) {
         assert channels.length == N_CHANNELS;
         channel1[h][w] = channels[0];
@@ -47,6 +66,10 @@ public class PixelBlock {
         channel3[h][w] = channels[2];
     }
 
+    /**
+     * Returns the pixel block as a single array of RGB-encoded integers,
+     * so Java can paint it back into a BufferedImage.
+     */
     public int[] getRgbArray() {
         int[] rgb = new int[HEIGHT * WIDTH];
 
@@ -58,7 +81,6 @@ public class PixelBlock {
                 n++;
             }
         }
-        
         return rgb;
     }
 
@@ -74,6 +96,9 @@ public class PixelBlock {
         return channel3;
     }
 
+    /**
+     * Returns the pixel block as a 3d array
+     */
     public double[][][] getAllChannels() {
         double[][][] allChannels = new double[HEIGHT][WIDTH][N_CHANNELS];
         for (int i = 0; i < HEIGHT; i++) {
@@ -86,15 +111,9 @@ public class PixelBlock {
         return allChannels;
     }
 
-    public void p(double[][] a) {
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j<a[0].length; j++) {
-                System.out.printf("%3f ", a[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
+    /**
+     * Sets the specified channel to the specified values.
+     */
     public void setChannel(int channel, double[][] vals) {
         for (int i = 0; i < PixelBlock.HEIGHT; i++) {
             for (int j = 0; j < PixelBlock.WIDTH; j++) {
@@ -107,6 +126,9 @@ public class PixelBlock {
         }
     }
 
+    /**
+     * Returns a formatted representation of the pixel block.
+     */
     public String toString() {
         String s = "";
         for (int i = 0; i < HEIGHT; i++) {

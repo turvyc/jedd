@@ -1,11 +1,8 @@
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
@@ -17,13 +14,16 @@ import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.MouseInputAdapter;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Observer;
 
+/**
+ * The GUI code.
+ */
 public class JeddFrame extends JFrame {
 
+    // Frame constants
     private final int FRAME_HEIGHT = 800;
     private final int FRAME_WIDTH = 2048;
     private final String FRAME_TITLE = "Jedd";
@@ -47,20 +47,24 @@ public class JeddFrame extends JFrame {
     public static String QT_LOW_CONST_OPTION = "Low Constant";
     public static String QT_HIGH_CONST_OPTION = "High Constant";
 
+    // Event controllers
     private JeddController controller;
     private JeddActionListener actionListener;
     private JeddMouseListener mouseListener;
 
+    // The images and the labels in which they reside
     private BufferedImage originalImage;
     private BufferedImage compressedImage;
     private JLabel originalImageLabel;
     private JLabel compressedImageLabel;
 
+    // The four main panels of the GUI
     private JPanel originalImagePanel;
     private JPanel pixelBlocksPanel;
     private JPanel controlPanel;
     private JPanel compressedImagePanel;
 
+    // The pixel block labels
     private PixelBlockLabel rgbLabel;
     private PixelBlockLabel yuvLabel;
     private PixelBlockLabel subsampleLabel;
@@ -77,12 +81,14 @@ public class JeddFrame extends JFrame {
         actionListener = new JeddActionListener();
         mouseListener = new JeddMouseListener();
 
+        // Create the image panels 
         originalImagePanel = createOriginalImagePanel();
         pixelBlocksPanel = createPixelBlocksPanel();
         controlPanel = createControlPanel();
         compressedImagePanel = createCompressedImagePanel();
+        
+        // Add them to the master panel
         JPanel masterPanel = new JPanel(new BorderLayout());
-
         masterPanel.add(controlPanel, BorderLayout.NORTH);
         masterPanel.add(originalImagePanel, BorderLayout.WEST);
         masterPanel.add(pixelBlocksPanel, BorderLayout.SOUTH);
@@ -91,10 +97,14 @@ public class JeddFrame extends JFrame {
         add(masterPanel);
     }
 
+    // Needed because of chicken/egg problem
     public void addController(JeddController c) {
         controller = c;
     }
 
+    /**
+     * Displays the original image.
+     */
     public void setOriginalImage(BufferedImage image) {
         originalImage = image;
         ImageIcon icon = new ImageIcon(image);
@@ -102,6 +112,9 @@ public class JeddFrame extends JFrame {
         originalImageLabel.addMouseListener(mouseListener);
     }
 
+    /**
+     * Displays the compressed image.
+     */
     public void setCompressedImage(BufferedImage image) {
         compressedImage = image;
         ImageIcon icon = new ImageIcon(image);
@@ -210,6 +223,10 @@ public class JeddFrame extends JFrame {
         return panel;
     }
 
+    /**
+     * Returns the list of observers so the controller can connect them
+     * to the observable model.
+     */
     public ArrayList<Observer> getObservers() {
         ArrayList<Observer> labels = new ArrayList<Observer>();
         labels.add(rgbLabel);
@@ -221,6 +238,9 @@ public class JeddFrame extends JFrame {
         return labels;
     }
         
+    /**
+     * Handles button clicks and combo box changes.
+     */
     public class JeddActionListener implements ActionListener {
         private String COMBOBOX = "comboBoxChanged";
 
@@ -238,6 +258,9 @@ public class JeddFrame extends JFrame {
         }
     }
 
+    /**
+     * Handles mouse clicks on the original image.
+     */
     public class JeddMouseListener extends MouseInputAdapter {
 
         public void mouseClicked(MouseEvent e) {

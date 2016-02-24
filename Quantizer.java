@@ -1,5 +1,11 @@
+/**
+ * Provides static methods to quantize a pixel block with a given table.
+ */
 public class Quantizer {
     
+    /**
+     * Quantizes a pixel block with a given quantization table.
+     */
     public static PixelBlock quantize(PixelBlock input, QuantizationTable table) {
 
         PixelBlock quantizedBlock = new PixelBlock();
@@ -31,6 +37,9 @@ public class Quantizer {
         return quantizedBlock;
     }
 
+    /**
+     * Dequantizes a pixel block according to the specified quantization table.
+     */
     public static PixelBlock dequantize(PixelBlock input, QuantizationTable table) {
 
         double[][] origY = input.getYChannel();

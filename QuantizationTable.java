@@ -5,6 +5,7 @@
  */
 public class QuantizationTable extends PixelBlock {
 
+    // Default JPEG luminence table
     private final double[][] DEFAULT_LUMINANCE = {
         {16, 11, 10, 16, 24, 40, 51, 61},
         {12, 12, 14, 19, 26, 58, 60, 55},
@@ -16,6 +17,7 @@ public class QuantizationTable extends PixelBlock {
         {72, 92, 95, 98, 112, 100, 103, 99}
     };
 
+    // Default JPEG chrominance table
     private final double[][] DEFAULT_CHROMINANCE = {
         {17, 18, 24, 47, 99, 99, 99, 99},
         {18, 21, 26, 66, 99, 99, 99, 99},
@@ -27,11 +29,17 @@ public class QuantizationTable extends PixelBlock {
         {99, 99, 99, 99, 99, 99, 99, 99}
     };
 
+    /**
+     * Creates a default quantization table.
+     */
     public QuantizationTable() {
         super();
         setDefault();
     }
 
+    /**
+     * Sets the tables to the default JPEG tables.
+     */
     public void setDefault() {
         for (int i = 0; i < PixelBlock.WIDTH; i++) {
             for (int j = 0; j < PixelBlock.HEIGHT; j++) {
@@ -42,6 +50,10 @@ public class QuantizationTable extends PixelBlock {
         }
     }
 
+    /**
+     * Sets the tables to a constant value.
+     * @param c the value
+     */
     public void setConstant(double c) {
         for (int i = 0; i < PixelBlock.WIDTH; i++) {
             for (int j = 0; j < PixelBlock.HEIGHT; j++) {
@@ -52,10 +64,18 @@ public class QuantizationTable extends PixelBlock {
         }
     }
 
+    /**
+     * Sets the luminance table to a specified table.
+     * @param vals the table
+     */
     public void setLuminance(double[][] vals) {
         channel1 = vals;
     }
 
+    /**
+     * Sets the chrominance table to a specified table.
+     * @param vals the table
+     */
     public void setChrominance(double[][] vals) {
         channel2 = vals;
         channel3 = vals;

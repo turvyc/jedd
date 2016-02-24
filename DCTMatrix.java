@@ -1,15 +1,21 @@
 import java.lang.Math;
 
+/**
+ * Applies forward and inverse DCT to a pixel block using the matrix algorithm.
+ */
 public class DCTMatrix {
 
-    private double[][] dctMatrix;
-    private double[][] iDctMatrix;
+    private double[][] dctMatrix;   // Forward DCT matrix
+    private double[][] iDctMatrix;  // Inverse DCT matrix
 
+    /**
+     * Calculates the DCT and iDCT matrices according to the pixel block size
+     */
     public DCTMatrix() {
-        // Create the DCT matrix
         dctMatrix = new double[PixelBlock.HEIGHT][PixelBlock.WIDTH];
         iDctMatrix = new double[PixelBlock.HEIGHT][PixelBlock.WIDTH];
 
+        // Create the DCT matrix
         double N = PixelBlock.HEIGHT;
         for (int i = 0; i < PixelBlock.HEIGHT; i++) {
             for (int j = 0; j < PixelBlock.WIDTH; j++) {
@@ -20,22 +26,17 @@ public class DCTMatrix {
             }
         }
 
-        // Create the inverse DCT Matrix
+        // Create the inverse DCT Matrix by simply swapping i and j
         for (int i = 0; i < PixelBlock.HEIGHT; i++) {
             for (int j = 0; j < PixelBlock.WIDTH; j++)
-                iDctMatrix[i][j] = dctMatrix[j][i];
+                iDctMatrix[i][j] = dctMatrix[j][i]; 
         }
     }
 
-    public void p(double[][] a) {
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j<a[0].length; j++) {
-                System.out.printf("%3f ", a[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
+    /**
+     * Performs a DCT.
+     * @param forwards if true, does forward DCT, if false, does inverse DCT
+     */
     public PixelBlock dct(PixelBlock original, boolean forwards) {
 
         double[][] origY = original.getYChannel();
@@ -46,6 +47,7 @@ public class DCTMatrix {
         double[][] dctU = new double[PixelBlock.HEIGHT][PixelBlock.WIDTH];
         double[][] dctV = new double[PixelBlock.HEIGHT][PixelBlock.WIDTH];
 
+        // Forward DCT
         if (forwards) {
             dctY = multiplyMatrices(dctMatrix, origY);
             dctY = multiplyMatrices(dctY, iDctMatrix);
@@ -57,6 +59,7 @@ public class DCTMatrix {
             dctV = multiplyMatrices(dctV, iDctMatrix);
         }
 
+        // Inverse DCT
         else {
             dctY = multiplyMatrices(iDctMatrix, origY);
             dctY = multiplyMatrices(dctY, dctMatrix);
@@ -77,6 +80,9 @@ public class DCTMatrix {
         return dctBlock;
     }
 
+    /**
+     * Multiplies two matrices together.
+     */
     private double[][] multiplyMatrices(double[][] a, double[][] b) {
         int N = PixelBlock.HEIGHT;
         double[][] product = new double[N][N];

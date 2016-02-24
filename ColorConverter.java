@@ -1,3 +1,6 @@
+/**
+ * Provides static methods for RGB <--> YUV conversions.
+ */
 public class ColorConverter {
 
     private static final double[][] RGB_TO_YUV_MATRIX = {
@@ -12,6 +15,9 @@ public class ColorConverter {
         {1, 2.03211, 0}
     };
 
+    /**
+     * Converts a YUV pixel block to RGB
+     */
     public static PixelBlock YUVtoRGB(PixelBlock original) {
         double[][][] yuvPixels = original.getAllChannels();
         PixelBlock rgbPixels = new PixelBlock();
@@ -22,6 +28,7 @@ public class ColorConverter {
                 double u = yuvPixels[i][j][PixelBlock.U];
                 double v = yuvPixels[i][j][PixelBlock.V];
 
+                // Perform matrix multiplication
                 double r = (YUV_TO_RGB_MATRIX[0][0] * y + YUV_TO_RGB_MATRIX[0][1] * u + 
                     YUV_TO_RGB_MATRIX[0][2] * v);
                 double g = (YUV_TO_RGB_MATRIX[1][0] * y + YUV_TO_RGB_MATRIX[1][1] * u + 
@@ -29,14 +36,17 @@ public class ColorConverter {
                 double b = (YUV_TO_RGB_MATRIX[2][0] * y + YUV_TO_RGB_MATRIX[2][1] * u + 
                     YUV_TO_RGB_MATRIX[2][2] * v);
 
+                // Set the values into the new pixel block
                 double[] rgb = {r, g, b};
                 rgbPixels.setPixel(i, j, limit(rgb));
             }
         }
-
         return rgbPixels;
     }
 
+    /**
+     * Converts an RGB pixel block to YUV
+     */
     public static PixelBlock RGBtoYUV(PixelBlock original) {
         double[][][] rgbPixels = original.getAllChannels();
         PixelBlock yuvPixels = new PixelBlock();
@@ -47,6 +57,7 @@ public class ColorConverter {
                 double g = rgbPixels[i][j][PixelBlock.G];
                 double b = rgbPixels[i][j][PixelBlock.B];
 
+                // Perform matrix multiplication
                 double y = (RGB_TO_YUV_MATRIX[0][0] * r + RGB_TO_YUV_MATRIX[0][1] * g + 
                     RGB_TO_YUV_MATRIX[0][2] * b);
                 double u = (RGB_TO_YUV_MATRIX[1][0] * r + RGB_TO_YUV_MATRIX[1][1] * g + 
@@ -54,6 +65,7 @@ public class ColorConverter {
                 double  v = (RGB_TO_YUV_MATRIX[2][0] * r + RGB_TO_YUV_MATRIX[2][1] * g + 
                     RGB_TO_YUV_MATRIX[2][2] * b);
 
+                // Set the values in the new pixel block
                 double[] yuv = {y, u, v};
                 yuvPixels.setPixel(i, j, yuv);
             }
@@ -61,9 +73,12 @@ public class ColorConverter {
         return yuvPixels;
     }
 
+    /**
+     * Ensures the values are within the proper limits (my only cheat function!)
+     */
     private static double[] limit(double[] input) {
-        double UPPER_LIMIT = 255.0f;
-        double LOWER_LIMIT = 0.0f;
+        double UPPER_LIMIT = 255.0;
+        double LOWER_LIMIT = 0.0;
         for (int i = 0; i < input.length; i++) {
             if (input[i] > UPPER_LIMIT)
                 input[i] = UPPER_LIMIT;

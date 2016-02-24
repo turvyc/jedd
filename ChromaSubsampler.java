@@ -77,12 +77,12 @@ public class ChromaSubsampler {
         for (int h = 0; h < PixelBlock.HEIGHT; h += PixelBlock.HEIGHT / J) {
             for (int w = 0; w < PixelBlock.WIDTH; w += J) {
                 // Now we are inside the reference block.
-                int p = 0;  // Which row
-                int q = 0;  // Which column
                 // The values for one row in the ref block
                 double[] uVals = new double[4];
                 double[] vVals = new double[4];
 
+                int p = 0;  // Which row
+                int q = 0;  // Which column
                 switch (type) {
                     case TYPE_440:
                         while (p < k) {

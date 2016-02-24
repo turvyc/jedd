@@ -5,8 +5,12 @@ import javax.swing.border.EtchedBorder;
 import java.util.Observer;
 import java.util.Observable;
 
+/**
+ * Displays a pixel block in the GUI.
+ */
 public class PixelBlockLabel extends JLabel implements Observer {
 
+    // The types of pixel blocks we want to show
     public static final int TYPE_RGB = 0;
     public static final int TYPE_YUV = 1;
     public static final int TYPE_SUB = 2;
@@ -14,9 +18,12 @@ public class PixelBlockLabel extends JLabel implements Observer {
     public static final int TYPE_QT = 4;
     public static final int TYPE_QTD = 5;
 
-    private int type;
-    private int channel;
+    private int type;       // The type of this one
+    private int channel;    // The channel this is currently displaying
 
+    /**
+     * Creates the label with the specified type and titled border.
+     */
     public PixelBlockLabel(String label, int t) {
         super();
         type = t;
@@ -25,9 +32,13 @@ public class PixelBlockLabel extends JLabel implements Observer {
         setBorder(BorderFactory.createTitledBorder(new EtchedBorder(), label));
     }
 
+    /**
+     * Required by Observer class, called when the model is updated.
+     */
     public void update(Observable o, Object arg) {
-        JeddModel model = (JeddModel) o;
-        channel = model.getVisibleChannel();
+        JeddModel model = (JeddModel) o;        // Cast the model
+        channel = model.getVisibleChannel();    // Check which channel should be shown
+        // Depending on the type, get the pixel block from the model
         switch (type) {
             case TYPE_RGB: setPixelBlock(model.getRgbBlock());
                            break;
@@ -44,6 +55,9 @@ public class PixelBlockLabel extends JLabel implements Observer {
         }
     }
 
+    /**
+     * Updates the label text using an HTML table.
+     */
     public void setPixelBlock(PixelBlock pb) {
         String text = "<html><table border='1'>";
         

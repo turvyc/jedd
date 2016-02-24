@@ -8,6 +8,9 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Observer;
 
+/**
+ * The controller acts as the interface between the GUI and the data model.
+ */
 public class JeddController {
 
     private JeddFrame frame;
@@ -26,16 +29,21 @@ public class JeddController {
             model.addObserver(o);
     }
 
+    /**
+     * Opens an image, processes it, and loads it into the GUI and data model.
+     */
     public void openImage() {
+        // Allow the user to open an image file
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Images",
                 "jpg", "jpeg", "gif", "png", "bmp", "tiff");
         chooser.setFileFilter(filter);
+
         if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
             try {
                 BufferedImage image = ImageIO.read(chooser.getSelectedFile());
 
-                // Scale the image to 512 pixel width. -1 is used to maintain aspect ratio
+                // Scale the image width. -1 is used to maintain aspect ratio
                 Image img = image.getScaledInstance(
                         IMAGE_WIDTH, -1, Image.SCALE_FAST);
 
@@ -61,6 +69,9 @@ public class JeddController {
         }
     }
 
+    /**
+     * Sets the user-specified pixel block (when the user clicks on the original image).
+     */
     public void selectPixelBlock(int x, int y) {
         int width = model.getImageWidth();
         int height = model.getImageHeight();
@@ -69,7 +80,6 @@ public class JeddController {
         // still get a full-sized block
         if (x > width - PixelBlock.WIDTH) 
             x = width - PixelBlock.WIDTH;
-        
         if (y > height - PixelBlock.HEIGHT) 
             y = height - PixelBlock.HEIGHT;
 
@@ -77,14 +87,20 @@ public class JeddController {
         model.setPixelBlocks(x, y);
     }
 
+    /**
+     * Handles events from the GUI ComboBoxes (here be very ugly code).
+     */
     public void comboBox(String command) {
 
+        // Channel options
         if (command.equals(JeddFrame.CHANNEL_1_OPTION))
             model.setVisibleChannel(1);
         else if (command.equals(JeddFrame.CHANNEL_2_OPTION))
             model.setVisibleChannel(2);
         else if (command.equals(JeddFrame.CHANNEL_3_OPTION))
             model.setVisibleChannel(3);
+
+        // Quantization table options
         else if (command.equals(JeddFrame.QT_DEFAULT_OPTION)) {
             model.setQT(-1);
             frame.setCompressedImage(model.getCompressedImage());
@@ -97,6 +113,8 @@ public class JeddController {
             model.setQT(100);
             frame.setCompressedImage(model.getCompressedImage());
         }
+
+        // Subsample algorithm options
         else if (command.equals(JeddFrame.SUBSAMPLE_420_OPTION)) {
             model.setSubsampler(ChromaSubsampler.TYPE_420);
         }
@@ -112,6 +130,8 @@ public class JeddController {
         else if (command.equals(JeddFrame.SUBSAMPLE_422_OPTION)) {
             model.setSubsampler(ChromaSubsampler.TYPE_422);
         }
+
+        // Subsample filter options
         else if (command.equals(JeddFrame.SUBSAMPLE_FILTER_CONST)) {
             model.setSubsampler(ChromaSubsampler.CONSTANT_FILTER);
         }

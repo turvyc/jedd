@@ -14,7 +14,7 @@ public class JeddController {
     private JeddModel model;
 
     // Chosen to be a nice round multiple of 8
-    public static final int IMAGE_WIDTH = 512;
+    public static final int IMAGE_WIDTH = 800;
 
     public JeddController(JeddFrame f, JeddModel m) {
         frame = f;
@@ -97,12 +97,26 @@ public class JeddController {
             model.setQT(100);
             frame.setCompressedImage(model.getCompressedImage());
         }
-            /*
-    SUBSAMPLE_420_OPTION 
-    SUBSAMPLE_411_OPTION 
-    SUBSAMPLE_444_OPTION 
-    SUBSAMPLE_440_OPTION 
-    SUBSAMPLE_422_OPTION 
-    */
+        else if (command.equals(JeddFrame.SUBSAMPLE_420_OPTION)) {
+            model.setSubsampler(ChromaSubsampler.TYPE_420);
+        }
+        else if (command.equals(JeddFrame.SUBSAMPLE_411_OPTION)) {
+            model.setSubsampler(ChromaSubsampler.TYPE_411);
+        }
+        else if (command.equals(JeddFrame.SUBSAMPLE_444_OPTION)) {
+            model.setSubsampler(ChromaSubsampler.TYPE_444);
+        }
+        else if (command.equals(JeddFrame.SUBSAMPLE_440_OPTION)) {
+            model.setSubsampler(ChromaSubsampler.TYPE_440);
+        }
+        else if (command.equals(JeddFrame.SUBSAMPLE_422_OPTION)) {
+            model.setSubsampler(ChromaSubsampler.TYPE_422);
+        }
+        else if (command.equals(JeddFrame.SUBSAMPLE_FILTER_CONST)) {
+            model.setSubsampler(ChromaSubsampler.CONSTANT_FILTER);
+        }
+        else if (command.equals(JeddFrame.SUBSAMPLE_FILTER_AVG)) {
+            model.setSubsampler(ChromaSubsampler.AVERAGE_FILTER);
+        }
     }
 }

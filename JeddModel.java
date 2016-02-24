@@ -159,4 +159,17 @@ public class JeddModel extends Observable {
         setPixelBlocks(x, y);
         compressedImage = compressImage(originalImage);
     }
+
+    public void setSubsampler(int i) {
+        subsampler.setType(i);
+        setPixelBlocks(x, y);
+        compressedImage = compressImage(originalImage);
+    }
+
+    public void setSubsamplerFilter(int i) {
+        subsampler.setFilter(i);
+        setPixelBlocks(x, y);
+        compressedImage = compressImage(originalImage);
+    }
+
 }

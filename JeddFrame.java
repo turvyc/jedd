@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionEvent;
@@ -40,6 +41,8 @@ public class JeddFrame extends JFrame {
     public static String SUBSAMPLE_444_OPTION = "4:4:4";
     public static String SUBSAMPLE_440_OPTION = "4:4:0";
     public static String SUBSAMPLE_422_OPTION = "4:2:2";
+    public static String SUBSAMPLE_FILTER_CONST = "Constant";
+    public static String SUBSAMPLE_FILTER_AVG = "Average";
     public static String QT_DEFAULT_OPTION = "Default";
     public static String QT_LOW_CONST_OPTION = "Low Constant";
     public static String QT_HIGH_CONST_OPTION = "High Constant";
@@ -78,12 +81,12 @@ public class JeddFrame extends JFrame {
         pixelBlocksPanel = createPixelBlocksPanel();
         controlPanel = createControlPanel();
         compressedImagePanel = createCompressedImagePanel();
-        JPanel masterPanel = new JPanel();
+        JPanel masterPanel = new JPanel(new BorderLayout());
 
-        masterPanel.add(originalImagePanel);
-        masterPanel.add(pixelBlocksPanel);
-        masterPanel.add(controlPanel);
-        masterPanel.add(compressedImagePanel);
+        masterPanel.add(controlPanel, BorderLayout.NORTH);
+        masterPanel.add(originalImagePanel, BorderLayout.WEST);
+        masterPanel.add(pixelBlocksPanel, BorderLayout.SOUTH);
+        masterPanel.add(compressedImagePanel, BorderLayout.EAST);
 
         add(masterPanel);
     }
@@ -139,8 +142,6 @@ public class JeddFrame extends JFrame {
 
     private JPanel createControlPanel() {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createTitledBorder(
-                    new EtchedBorder(), "Control Panel"));
 
         JButton openImageButton = new JButton(OPEN_BUTTON);
         JButton updateImageButton = new JButton(UPDATE_BUTTON);
@@ -187,8 +188,8 @@ public class JeddFrame extends JFrame {
     }
 
     private JPanel createPixelBlocksPanel() {
-        final int ROWS = 2;
-        final int COLS = 3;
+        final int ROWS = 1;
+        final int COLS = 6;
         final int PAD= 5;
         JPanel panel = new JPanel(new GridLayout(ROWS, COLS, PAD, PAD));
 

@@ -1,6 +1,10 @@
 public class ChromaSubsampler {
 
     public static final int TYPE_420 = 0;
+    public static final int TYPE_444 = 1;
+    public static final int TYPE_411 = 2;
+    public static final int TYPE_422 = 3;
+    public static final int TYPE_440 = 4;
 
     public static final int CONSTANT_FILTER = 0;
     public static final int AVERAGE_FILTER = 1;
@@ -27,6 +31,22 @@ public class ChromaSubsampler {
         switch (t) {
             case TYPE_420: 
                 a = 2;
+                b = 0;
+                break;
+            case TYPE_444: 
+                a = 4;
+                b = 4;
+                break;
+            case TYPE_411: 
+                a = 1;
+                b = 1;
+                break;
+            case TYPE_422: 
+                a = 2;
+                b = 2;
+                break;
+            case TYPE_440: 
+                a = 4;
                 b = 0;
                 break;
             default:
@@ -57,13 +77,88 @@ public class ChromaSubsampler {
         for (int h = 0; h < PixelBlock.HEIGHT; h += PixelBlock.HEIGHT / J) {
             for (int w = 0; w < PixelBlock.WIDTH; w += J) {
                 // Now we are inside the reference block.
-                int p; int q; p = q = 0;
-                while (p < k) {
-                    switch (type) {
-                        case TYPE_420:
+                int p = 0;  // Which row
+                int q = 0;  // Which column
+                // The values for one row in the ref block
+                double[] uVals = new double[4];
+                double[] vVals = new double[4];
+
+                switch (type) {
+                    case TYPE_440:
+                        while (p < k) {
                             while (q < J) {
-                                double[] uVals = new double[4];
-                                double[] vVals = new double[4];
+                                uVals[0] = uChannel[h + p][w + q];
+                                uVals[1] = uChannel[h + p + 1][w + q];
+                                vVals[0] = vChannel[h + p][w + q];
+                                vVals[1] = vChannel[h + p + 1][w + q];
+
+                                double u = filter(uVals);
+                                double v = filter(vVals);
+
+                                subUChannel[h + p][w + q] = u;
+                                subUChannel[h + p + 1][w + q] = u;
+                                subVChannel[h + p][w + q] = v;
+                                subVChannel[h + p + 1][w + q] = v;
+
+                                q += a;
+                            }
+                            p += k;
+                        }
+                        break;
+                    case TYPE_422:
+                        while (p < k) {
+                            while (q < J) {
+                                uVals[0] = uChannel[h + p][w + q];
+                                uVals[1] = uChannel[h + p][w + q + 1];
+                                vVals[0] = vChannel[h + p][w + q];
+                                vVals[1] = vChannel[h + p][w + q + 1];
+
+                                double u = filter(uVals);
+                                double v = filter(vVals);
+
+                                subUChannel[h + p][w + q] = u;
+                                subUChannel[h + p][w + q + 1] = u;
+                                subVChannel[h + p][w + q] = v;
+                                subVChannel[h + p][w + q + 1] = v;
+
+                                q += a;
+                            }
+                            p++;
+                        }
+                        break;
+
+                    case TYPE_411:
+                        while (p < k) {
+                            while (q < J) {
+                                uVals[q] = uChannel[h + p][w + q];
+                                vVals[q] = vChannel[h + p][w + q];
+                                q++;
+                            }
+                            q = 0;
+                            double u = filter(uVals);
+                            double v = filter(vVals);
+                            while (q < J) {
+                                subUChannel[h + p][w + q] = u;
+                                subVChannel[h + p][w + q] = v;
+                            }
+                            p++;
+                        }
+                        break;
+
+                    case TYPE_444:
+                        while (p < k) {
+                            while (q < J) {
+                                subUChannel[h + p][w + q] = uChannel[h + p][w + q];
+                                subVChannel[h + p][w + q] = vChannel[h + p][w + q];
+                                q++;
+                            }
+                            p++;
+                        }
+                        break;
+
+                    case TYPE_420:
+                        while (p < k) {
+                            while (q < J) {
                                 uVals[0] = uChannel[h + p][w + q];
                                 uVals[1] = uChannel[h + p][w + q + 1];
                                 uVals[2] = uChannel[h + p + 1][w + q];
@@ -90,8 +185,8 @@ public class ChromaSubsampler {
                                 q += a;
                             }
                             p += k;
-                            break;
-                    }
+                        }
+                        break;
                 }
             }
         }

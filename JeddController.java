@@ -61,6 +61,7 @@ public class JeddController {
                 BufferedImage trimmed = buff.getSubimage(0, 0, buff.getWidth(), buff.getHeight() - trimSize);
 
                 // Set the image in the frame and model
+                frame.enableControlPanel(true);
                 frame.setOriginalImage(trimmed);
                 model.setOriginalImage(trimmed);
                 frame.setCompressedImage(model.getCompressedImage());
@@ -93,50 +94,45 @@ public class JeddController {
     public void comboBox(String command) {
 
         // Channel options
-        if (command.equals(JeddFrame.CHANNEL_1_OPTION))
+        if (command.equals(JeddFrame.CHANNEL_1_OPTION)) {
             model.setVisibleChannel(1);
-        else if (command.equals(JeddFrame.CHANNEL_2_OPTION))
+            return;
+        }
+        else if (command.equals(JeddFrame.CHANNEL_2_OPTION)) {
             model.setVisibleChannel(2);
-        else if (command.equals(JeddFrame.CHANNEL_3_OPTION))
+            return;
+        }
+        else if (command.equals(JeddFrame.CHANNEL_3_OPTION)) {
             model.setVisibleChannel(3);
+            return;
+        }
 
         // Quantization table options
-        else if (command.equals(JeddFrame.QT_DEFAULT_OPTION)) {
+        else if (command.equals(JeddFrame.QT_DEFAULT_OPTION))
             model.setQT(-1);
-            frame.setCompressedImage(model.getCompressedImage());
-        }
-        else if (command.equals(JeddFrame.QT_LOW_CONST_OPTION)) {
+        else if (command.equals(JeddFrame.QT_LOW_CONST_OPTION))
             model.setQT(5);
-            frame.setCompressedImage(model.getCompressedImage());
-        }
-        else if (command.equals(JeddFrame.QT_HIGH_CONST_OPTION)) {
+        else if (command.equals(JeddFrame.QT_HIGH_CONST_OPTION))
             model.setQT(100);
-            frame.setCompressedImage(model.getCompressedImage());
-        }
 
         // Subsample algorithm options
-        else if (command.equals(JeddFrame.SUBSAMPLE_420_OPTION)) {
+        else if (command.equals(JeddFrame.SUBSAMPLE_420_OPTION))
             model.setSubsampler(ChromaSubsampler.TYPE_420);
-        }
-        else if (command.equals(JeddFrame.SUBSAMPLE_411_OPTION)) {
+        else if (command.equals(JeddFrame.SUBSAMPLE_411_OPTION))
             model.setSubsampler(ChromaSubsampler.TYPE_411);
-        }
-        else if (command.equals(JeddFrame.SUBSAMPLE_444_OPTION)) {
+        else if (command.equals(JeddFrame.SUBSAMPLE_444_OPTION))
             model.setSubsampler(ChromaSubsampler.TYPE_444);
-        }
-        else if (command.equals(JeddFrame.SUBSAMPLE_440_OPTION)) {
+        else if (command.equals(JeddFrame.SUBSAMPLE_440_OPTION))
             model.setSubsampler(ChromaSubsampler.TYPE_440);
-        }
-        else if (command.equals(JeddFrame.SUBSAMPLE_422_OPTION)) {
+        else if (command.equals(JeddFrame.SUBSAMPLE_422_OPTION))
             model.setSubsampler(ChromaSubsampler.TYPE_422);
-        }
 
         // Subsample filter options
-        else if (command.equals(JeddFrame.SUBSAMPLE_FILTER_CONST)) {
-            model.setSubsampler(ChromaSubsampler.CONSTANT_FILTER);
-        }
-        else if (command.equals(JeddFrame.SUBSAMPLE_FILTER_AVG)) {
-            model.setSubsampler(ChromaSubsampler.AVERAGE_FILTER);
-        }
+        else if (command.equals(JeddFrame.SUBSAMPLE_FILTER_CONST))
+            model.setSubsamplerFilter(ChromaSubsampler.CONSTANT_FILTER);
+        else if (command.equals(JeddFrame.SUBSAMPLE_FILTER_AVG))
+            model.setSubsamplerFilter(ChromaSubsampler.AVERAGE_FILTER);
+
+        frame.setCompressedImage(model.getCompressedImage());
     }
 }

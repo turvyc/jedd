@@ -1,11 +1,16 @@
+/**
+ * Subsamples the U and V channels according to the specified algorithm.
+ */
 public class ChromaSubsampler {
 
+    // The different subsampling algorithms
     public static final int TYPE_420 = 0;
     public static final int TYPE_444 = 1;
     public static final int TYPE_411 = 2;
     public static final int TYPE_422 = 3;
     public static final int TYPE_440 = 4;
 
+    // The types of filtering
     public static final int CONSTANT_FILTER = 0;
     public static final int AVERAGE_FILTER = 1;
 
@@ -23,6 +28,7 @@ public class ChromaSubsampler {
     }
 
     public ChromaSubsampler(int t) {
+        this();
         setType(t);
     }
 
@@ -74,19 +80,20 @@ public class ChromaSubsampler {
         double[][] subUChannel = new double[PixelBlock.HEIGHT][PixelBlock.WIDTH];
         double[][] subVChannel = new double[PixelBlock.HEIGHT][PixelBlock.WIDTH];
 
-        for (int h = 0; h < PixelBlock.HEIGHT; h += PixelBlock.HEIGHT / J) {
+        for (int h = 0; h < PixelBlock.HEIGHT; h += k) {
             for (int w = 0; w < PixelBlock.WIDTH; w += J) {
                 // Now we are inside the reference block.
-                // The values for one row in the ref block
-                double[] uVals = new double[4];
-                double[] vVals = new double[4];
+                // These values are for one row in the ref block
 
                 int p = 0;  // Which row
                 int q = 0;  // Which column
                 switch (type) {
+
                     case TYPE_440:
                         while (p < k) {
                             while (q < J) {
+                                double[] uVals = new double[2];
+                                double[] vVals = new double[2];
                                 uVals[0] = uChannel[h + p][w + q];
                                 uVals[1] = uChannel[h + p + 1][w + q];
                                 vVals[0] = vChannel[h + p][w + q];
@@ -105,9 +112,12 @@ public class ChromaSubsampler {
                             p += k;
                         }
                         break;
+
                     case TYPE_422:
                         while (p < k) {
                             while (q < J) {
+                                double[] uVals = new double[2];
+                                double[] vVals = new double[2];
                                 uVals[0] = uChannel[h + p][w + q];
                                 uVals[1] = uChannel[h + p][w + q + 1];
                                 vVals[0] = vChannel[h + p][w + q];
@@ -127,8 +137,12 @@ public class ChromaSubsampler {
                         }
                         break;
 
+                    // disabled!
                     case TYPE_411:
-                        while (p < k) {
+                        int x = 0;
+                        while (x < 2) {
+                            double[] uVals = new double[4];
+                            double[] vVals = new double[4];
                             while (q < J) {
                                 uVals[q] = uChannel[h + p][w + q];
                                 vVals[q] = vChannel[h + p][w + q];
@@ -141,24 +155,25 @@ public class ChromaSubsampler {
                                 subUChannel[h + p][w + q] = u;
                                 subVChannel[h + p][w + q] = v;
                             }
-                            p++;
+                            x++;
                         }
                         break;
 
                     case TYPE_444:
-                        while (p < k) {
-                            while (q < J) {
-                                subUChannel[h + p][w + q] = uChannel[h + p][w + q];
-                                subVChannel[h + p][w + q] = vChannel[h + p][w + q];
-                                q++;
-                            }
-                            p++;
+                        while (q < J) {
+                            subUChannel[h + p][w + q] = uChannel[h + p][w + q];
+                            subVChannel[h + p][w + q] = vChannel[h + p][w + q];
+                            subUChannel[h + p + 1][w + q] = uChannel[h + p + 1][w + q];
+                            subVChannel[h + p + 1][w + q] = vChannel[h + p + 1][w + q];
+                            q++;
                         }
                         break;
 
                     case TYPE_420:
                         while (p < k) {
                             while (q < J) {
+                                double[] uVals = new double[4];
+                                double[] vVals = new double[4];
                                 uVals[0] = uChannel[h + p][w + q];
                                 uVals[1] = uChannel[h + p][w + q + 1];
                                 uVals[2] = uChannel[h + p + 1][w + q];

@@ -28,9 +28,8 @@ public class JeddFrame extends JFrame {
     private final int FRAME_WIDTH = 2048;
     private final String FRAME_TITLE = "Jedd";
 
-    // Button texts
+    // Button text
     public static String OPEN_BUTTON = "Open image";
-    public static String UPDATE_BUTTON = "Update";
 
     // Combo box options
     public static String CHANNEL_1_OPTION = "Channel 1";
@@ -43,7 +42,7 @@ public class JeddFrame extends JFrame {
     public static String SUBSAMPLE_422_OPTION = "4:2:2";
     public static String SUBSAMPLE_FILTER_CONST = "Constant";
     public static String SUBSAMPLE_FILTER_AVG = "Average";
-    public static String QT_DEFAULT_OPTION = "Default";
+    public static String QT_DEFAULT_OPTION = "Default QT";
     public static String QT_LOW_CONST_OPTION = "Low Constant";
     public static String QT_HIGH_CONST_OPTION = "High Constant";
 
@@ -63,6 +62,13 @@ public class JeddFrame extends JFrame {
     private JPanel pixelBlocksPanel;
     private JPanel controlPanel;
     private JPanel compressedImagePanel;
+
+    // The control panel components
+    private JButton openImageButton;
+    private JComboBox<String> channelComboBox;
+    private JComboBox<String> subsampleComboBox;
+    private JComboBox<String> filterComboBox;
+    private JComboBox<String> qtComboBox;
 
     // The pixel block labels
     private PixelBlockLabel rgbLabel;
@@ -156,37 +162,42 @@ public class JeddFrame extends JFrame {
     private JPanel createControlPanel() {
         JPanel panel = new JPanel();
 
-        JButton openImageButton = new JButton(OPEN_BUTTON);
-        JButton updateImageButton = new JButton(UPDATE_BUTTON);
+        openImageButton = new JButton(OPEN_BUTTON);
 
-        JComboBox<String> channelComboBox = new JComboBox<String>();
+        channelComboBox = new JComboBox<String>();
         channelComboBox.addItem(CHANNEL_1_OPTION);
         channelComboBox.addItem(CHANNEL_2_OPTION);
         channelComboBox.addItem(CHANNEL_3_OPTION);
 
-        JComboBox<String> subsampleComboBox = new JComboBox<String>();
+        subsampleComboBox = new JComboBox<String>();
         subsampleComboBox.addItem(SUBSAMPLE_420_OPTION);
-        subsampleComboBox.addItem(SUBSAMPLE_411_OPTION);
+        // subsampleComboBox.addItem(SUBSAMPLE_411_OPTION);
         subsampleComboBox.addItem(SUBSAMPLE_422_OPTION);
         subsampleComboBox.addItem(SUBSAMPLE_444_OPTION);
         subsampleComboBox.addItem(SUBSAMPLE_440_OPTION);
 
-        JComboBox<String> qtComboBox = new JComboBox<String>();
+        filterComboBox = new JComboBox<String>();
+        filterComboBox.addItem(SUBSAMPLE_FILTER_CONST);
+        filterComboBox.addItem(SUBSAMPLE_FILTER_AVG);
+
+        qtComboBox = new JComboBox<String>();
         qtComboBox.addItem(QT_DEFAULT_OPTION);
         qtComboBox.addItem(QT_LOW_CONST_OPTION);
         qtComboBox.addItem(QT_HIGH_CONST_OPTION);
 
         openImageButton.addActionListener(actionListener);
-        updateImageButton.addActionListener(actionListener);
         channelComboBox.addActionListener(actionListener);
         subsampleComboBox.addActionListener(actionListener);
+        filterComboBox.addActionListener(actionListener);
         qtComboBox.addActionListener(actionListener);
 
         panel.add(openImageButton);
-        panel.add(updateImageButton);
         panel.add(channelComboBox);
         panel.add(subsampleComboBox);
+        panel.add(filterComboBox);
         panel.add(qtComboBox);
+
+        enableControlPanel(false);
 
         return panel;
     }
@@ -221,6 +232,13 @@ public class JeddFrame extends JFrame {
         panel.add(quantizedLabel);
 
         return panel;
+    }
+
+    public void enableControlPanel(boolean e) {
+        channelComboBox.setEnabled(e);
+        subsampleComboBox.setEnabled(e);
+        filterComboBox.setEnabled(e);
+        qtComboBox.setEnabled(e);
     }
 
     /**

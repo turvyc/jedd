@@ -15,16 +15,19 @@ public class PixelBlockLabel extends JLabel implements Observer {
     public static final int TYPE_QTD = 5;
 
     private int type;
+    private int channel;
 
     public PixelBlockLabel(String label, int t) {
         super();
         type = t;
+        channel = 0;
         setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         setBorder(BorderFactory.createTitledBorder(new EtchedBorder(), label));
     }
 
     public void update(Observable o, Object arg) {
         JeddModel model = (JeddModel) o;
+        channel = model.getVisibleChannel();
         switch (type) {
             case TYPE_RGB: setPixelBlock(model.getRgbBlock());
                            break;
@@ -49,8 +52,7 @@ public class PixelBlockLabel extends JLabel implements Observer {
             text += "<tr>";
             for (int j = 0; j < PixelBlock.HEIGHT; j++) {
                 text += "<td align='center'>";
-                text += String.format("%d,%d,%d", (int)vals[i][j][0],
-                        (int)vals[i][j][1], (int)vals[i][j][2]);
+                text += String.format("%d", (int)vals[i][j][channel]);
                 text += "</td>";
             }
             text += "</tr>";

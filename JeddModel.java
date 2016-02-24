@@ -18,10 +18,13 @@ public class JeddModel extends Observable {
     private PixelBlock dctBlock;
     private PixelBlock quantizedBlock;
 
+    private int visibleChannel;
+
     public JeddModel() {
         subsampler = new ChromaSubsampler();
         qt = new QuantizationTable();
         dct = new DCTMatrix();
+        visibleChannel = 0;
     }
 
     public void setOriginalImage(BufferedImage img) {
@@ -134,4 +137,13 @@ public class JeddModel extends Observable {
         return compressedImage;
     }
 
+    public int getVisibleChannel() {
+        return visibleChannel;
+    }
+
+    public void setVisibleChannel(int c) {
+        visibleChannel = c - 1;
+        setChanged();
+        notifyObservers();
+    }
 }

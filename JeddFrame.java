@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,8 +27,22 @@ public class JeddFrame extends JFrame {
     private final int FRAME_WIDTH = 2048;
     private final String FRAME_TITLE = "Jedd";
 
+    // Button texts
     public static String OPEN_BUTTON = "Open image";
     public static String UPDATE_BUTTON = "Update";
+
+    // Combo box options
+    public static String CHANNEL_1_OPTION = "Channel 1";
+    public static String CHANNEL_2_OPTION = "Channel 2";
+    public static String CHANNEL_3_OPTION = "Channel 3";
+    public static String SUBSAMPLE_420_OPTION = "4:2:0";
+    public static String SUBSAMPLE_411_OPTION = "4:2:1";
+    public static String SUBSAMPLE_444_OPTION = "4:4:4";
+    public static String SUBSAMPLE_440_OPTION = "4:4:0";
+    public static String SUBSAMPLE_422_OPTION = "4:2:2";
+    public static String QT_DEFAULT_OPTION = "Default";
+    public static String QT_LOW_CONST_OPTION = "Low Constant";
+    public static String QT_HIGH_CONST_OPTION = "High Constant";
 
     private JeddController controller;
     private JeddActionListener actionListener;
@@ -40,6 +55,7 @@ public class JeddFrame extends JFrame {
 
     private JPanel originalImagePanel;
     private JPanel pixelBlocksPanel;
+    private JPanel controlPanel;
     private JPanel compressedImagePanel;
 
     private PixelBlockLabel rgbLabel;
@@ -60,11 +76,13 @@ public class JeddFrame extends JFrame {
 
         originalImagePanel = createOriginalImagePanel();
         pixelBlocksPanel = createPixelBlocksPanel();
+        controlPanel = createControlPanel();
         compressedImagePanel = createCompressedImagePanel();
         JPanel masterPanel = new JPanel();
 
         masterPanel.add(originalImagePanel);
         masterPanel.add(pixelBlocksPanel);
+        masterPanel.add(controlPanel);
         masterPanel.add(compressedImagePanel);
 
         add(masterPanel);
@@ -115,13 +133,47 @@ public class JeddFrame extends JFrame {
         panel.setBorder(BorderFactory.createTitledBorder(
                     new EtchedBorder(), "Original Image"));
         originalImageLabel = new JLabel();
+        panel.add(originalImageLabel);
+        return panel;
+    }
+
+    private JPanel createControlPanel() {
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createTitledBorder(
+                    new EtchedBorder(), "Control Panel"));
 
         JButton openImageButton = new JButton(OPEN_BUTTON);
+        JButton updateImageButton = new JButton(UPDATE_BUTTON);
+
+        JComboBox<String> channelComboBox = new JComboBox<String>();
+        channelComboBox.addItem(CHANNEL_1_OPTION);
+        channelComboBox.addItem(CHANNEL_2_OPTION);
+        channelComboBox.addItem(CHANNEL_3_OPTION);
+
+        JComboBox<String> subsampleComboBox = new JComboBox<String>();
+        subsampleComboBox.addItem(SUBSAMPLE_420_OPTION);
+        subsampleComboBox.addItem(SUBSAMPLE_411_OPTION);
+        subsampleComboBox.addItem(SUBSAMPLE_422_OPTION);
+        subsampleComboBox.addItem(SUBSAMPLE_444_OPTION);
+        subsampleComboBox.addItem(SUBSAMPLE_440_OPTION);
+
+        JComboBox<String> qtComboBox = new JComboBox<String>();
+        qtComboBox.addItem(QT_DEFAULT_OPTION);
+        qtComboBox.addItem(QT_LOW_CONST_OPTION);
+        qtComboBox.addItem(QT_HIGH_CONST_OPTION);
 
         openImageButton.addActionListener(actionListener);
+        updateImageButton.addActionListener(actionListener);
+        channelComboBox.addActionListener(actionListener);
+        subsampleComboBox.addActionListener(actionListener);
+        qtComboBox.addActionListener(actionListener);
 
-        panel.add(originalImageLabel);
         panel.add(openImageButton);
+        panel.add(updateImageButton);
+        panel.add(channelComboBox);
+        panel.add(subsampleComboBox);
+        panel.add(qtComboBox);
+
         return panel;
     }
 
@@ -169,11 +221,17 @@ public class JeddFrame extends JFrame {
     }
         
     public class JeddActionListener implements ActionListener {
+        private String COMBOBOX = "comboBoxChanged";
 
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
 
-            if (command.equals(JeddFrame.OPEN_BUTTON)) {
+            if (command.equals(COMBOBOX)) {
+                JComboBox cb = (JComboBox) e.getSource();
+                controller.comboBox((String)cb.getSelectedItem());
+            }
+
+            else if (command.equals(JeddFrame.OPEN_BUTTON)) {
                 controller.openImage();
             }
         }

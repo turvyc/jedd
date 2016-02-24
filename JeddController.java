@@ -76,4 +76,24 @@ public class JeddController {
         frame.drawPixelBlock(x, y);
         model.setPixelBlocks(x, y);
     }
+
+    public void comboBox(String command) {
+
+        if (command.equals(JeddFrame.CHANNEL_1_OPTION))
+            model.setVisibleChannel(1);
+        if (command.equals(JeddFrame.CHANNEL_2_OPTION))
+            model.setVisibleChannel(2);
+        if (command.equals(JeddFrame.CHANNEL_3_OPTION))
+            model.setVisibleChannel(3);
+            /*
+    SUBSAMPLE_420_OPTION 
+    SUBSAMPLE_411_OPTION 
+    SUBSAMPLE_444_OPTION 
+    SUBSAMPLE_440_OPTION 
+    SUBSAMPLE_422_OPTION 
+    QT_DEFAULT_OPTION 
+    QT_LOW_CONST_OPTION 
+    QT_HIGH_CONST_OPTION 
+    */
+    }
 }

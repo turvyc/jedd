@@ -44,13 +44,13 @@ public class PixelBlockLabel extends JLabel implements Observer {
     public void setPixelBlock(PixelBlock pb) {
         String text = "<html><table border='1'>";
         
-        int[][][] vals = pb.getAllChannels();
+        float[][][] vals = pb.getAllChannels();
         for (int i = 0; i < PixelBlock.WIDTH; i++) {
             text += "<tr>";
             for (int j = 0; j < PixelBlock.HEIGHT; j++) {
                 text += "<td align='center'>";
-                text += String.format("%d,%d,%d", vals[i][j][0],
-                        vals[i][j][1], vals[i][j][2]);
+                text += String.format("%d,%d,%d", (int)vals[i][j][0],
+                        (int)vals[i][j][1], (int)vals[i][j][2]);
                 text += "</td>";
             }
             text += "</tr>";

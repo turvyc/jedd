@@ -14,23 +14,24 @@ public class PixelBlock {
     public static final int G = 1;
     public static final int B = 2;
 
-    protected int[][] channel1;
-    protected int[][] channel2;
-    protected int[][] channel3;
+    protected float[][] channel1;
+    protected float[][] channel2;
+    protected float[][] channel3;
 
     public PixelBlock() {
-        channel1 = new int[HEIGHT][WIDTH];
-        channel2 = new int[HEIGHT][WIDTH];
-        channel3 = new int[HEIGHT][WIDTH];
+        channel1 = new float[HEIGHT][WIDTH];
+        channel2 = new float[HEIGHT][WIDTH];
+        channel3 = new float[HEIGHT][WIDTH];
     }
 
     public void loadRGB(int[] pixels) {
         assert (pixels.length == HEIGHT * WIDTH);
-        int[] rgb = new int[N_CHANNELS];
+        float[] rgb = new float[N_CHANNELS];
         for (int i = 0; i < HEIGHT * WIDTH; i++) {
-            rgb[R] = (pixels[i] >> 16) & 0xff;
-            rgb[G] = (pixels[i] >> 8) & 0xff;
-            rgb[B] = pixels[i] & 0xff;
+            Color c = new Color(pixels[i]);
+            rgb[R] = (float) c.getRed();
+            rgb[G] = (float) c.getGreen();
+            rgb[B] = (float) c.getBlue();
 
             int w = i / WIDTH;
             int h = i - w * WIDTH;
@@ -39,7 +40,7 @@ public class PixelBlock {
         }
     }
 
-    public void setPixel(int h, int w, int[] channels) {
+    public void setPixel(int h, int w, float[] channels) {
         assert channels.length == N_CHANNELS;
         channel1[h][w] = channels[0];
         channel2[h][w] = channels[1];
@@ -51,7 +52,7 @@ public class PixelBlock {
 
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                Color c = new Color(channel1[i][j], channel2[i][j], channel3[i][j]);
+                Color c = new Color((int)channel1[i][j], (int)channel2[i][j], (int)channel3[i][j]);
                 rgb[i + j] = c.getRGB();
             }
         }
@@ -60,20 +61,20 @@ public class PixelBlock {
     }
 
 
-    public int[][] getYChannel() {
+    public float[][] getYChannel() {
         return channel1;
     }
 
-    public int[][] getUChannel() {
+    public float[][] getUChannel() {
         return channel2;
     }
 
-    public int[][] getVChannel() {
+    public float[][] getVChannel() {
         return channel3;
     }
 
-    public int[][][] getAllChannels() {
-        int[][][] allChannels = new int[HEIGHT][WIDTH][N_CHANNELS];
+    public float[][][] getAllChannels() {
+        float[][][] allChannels = new float[HEIGHT][WIDTH][N_CHANNELS];
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 allChannels[i][j][R] = channel1[i][j];
@@ -84,7 +85,7 @@ public class PixelBlock {
         return allChannels;
     }
 
-    public void setChannel(int channel, int[][] vals) {
+    public void setChannel(int channel, float[][] vals) {
         switch (channel) {
             case Y: channel1 = vals; break;
             case U: channel2 = vals; break;
@@ -96,7 +97,7 @@ public class PixelBlock {
         String s = "";
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                s += String.format("%-5d", channel1[i][j]); 
+                s += String.format("%-5f ", channel1[i][j]); 
             }
             s += String.format("\n");
         }

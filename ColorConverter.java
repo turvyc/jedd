@@ -1,8 +1,3 @@
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
-import java.util.ArrayList;
-
 public class ColorConverter {
 
     private static final double[][] RGB_TO_YUV_MATRIX = {
@@ -18,24 +13,24 @@ public class ColorConverter {
     };
 
     public static PixelBlock YUVtoRGB(PixelBlock original) {
-        int[][][] yuvPixels = original.getAllChannels();
+        float[][][] yuvPixels = original.getAllChannels();
         PixelBlock rgbPixels = new PixelBlock();
 
         for (int i = 0; i < PixelBlock.HEIGHT; i++) {
             for (int j = 0; j < PixelBlock.WIDTH; j++) {
-                int y = yuvPixels[i][j][PixelBlock.Y];
-                int u = yuvPixels[i][j][PixelBlock.U];
-                int v = yuvPixels[i][j][PixelBlock.V];
+                float y = yuvPixels[i][j][PixelBlock.Y];
+                float u = yuvPixels[i][j][PixelBlock.U];
+                float v = yuvPixels[i][j][PixelBlock.V];
 
-                int r = (int) (YUV_TO_RGB_MATRIX[0][0] * y + YUV_TO_RGB_MATRIX[0][1] * u + 
+                float r = (float) (YUV_TO_RGB_MATRIX[0][0] * y + YUV_TO_RGB_MATRIX[0][1] * u + 
                     YUV_TO_RGB_MATRIX[0][2] * v);
-                int g = (int) (YUV_TO_RGB_MATRIX[1][0] * y + YUV_TO_RGB_MATRIX[1][1] * u + 
+                float g = (float) (YUV_TO_RGB_MATRIX[1][0] * y + YUV_TO_RGB_MATRIX[1][1] * u + 
                     YUV_TO_RGB_MATRIX[1][2] * v);
-                int b = (int) (YUV_TO_RGB_MATRIX[2][0] * y + YUV_TO_RGB_MATRIX[2][1] * u + 
+                float b = (float) (YUV_TO_RGB_MATRIX[2][0] * y + YUV_TO_RGB_MATRIX[2][1] * u + 
                     YUV_TO_RGB_MATRIX[2][2] * v);
 
-                int[] rgb = {r, g, b};
-                rgbPixels.setPixel(i, j, rgb);
+                float[] rgb = {r, g, b};
+                rgbPixels.setPixel(i, j, limit(rgb));
             }
         }
 
@@ -43,26 +38,38 @@ public class ColorConverter {
     }
 
     public static PixelBlock RGBtoYUV(PixelBlock original) {
-        int[][][] rgbPixels = original.getAllChannels();
+        float[][][] rgbPixels = original.getAllChannels();
         PixelBlock yuvPixels = new PixelBlock();
 
         for (int i = 0; i < PixelBlock.HEIGHT; i++) {
             for (int j = 0; j < PixelBlock.WIDTH; j++) {
-                int r = rgbPixels[i][j][PixelBlock.R];
-                int g = rgbPixels[i][j][PixelBlock.G];
-                int b = rgbPixels[i][j][PixelBlock.B];
+                float r = rgbPixels[i][j][PixelBlock.R];
+                float g = rgbPixels[i][j][PixelBlock.G];
+                float b = rgbPixels[i][j][PixelBlock.B];
 
-                int y = (int) (RGB_TO_YUV_MATRIX[0][0] * r + RGB_TO_YUV_MATRIX[0][1] * g + 
+                float y = (float) (RGB_TO_YUV_MATRIX[0][0] * r + RGB_TO_YUV_MATRIX[0][1] * g + 
                     RGB_TO_YUV_MATRIX[0][2] * b);
-                int u = (int) (RGB_TO_YUV_MATRIX[1][0] * r + RGB_TO_YUV_MATRIX[1][1] * g + 
+                float u = (float) (RGB_TO_YUV_MATRIX[1][0] * r + RGB_TO_YUV_MATRIX[1][1] * g + 
                     RGB_TO_YUV_MATRIX[1][2] * b);
-                int v = (int) (RGB_TO_YUV_MATRIX[2][0] * r + RGB_TO_YUV_MATRIX[2][1] * g + 
+                float  v = (float) (RGB_TO_YUV_MATRIX[2][0] * r + RGB_TO_YUV_MATRIX[2][1] * g + 
                     RGB_TO_YUV_MATRIX[2][2] * b);
 
-                int[] yuv = {y, u, v};
+                float[] yuv = {y, u, v};
                 yuvPixels.setPixel(i, j, yuv);
             }
         }
         return yuvPixels;
+    }
+
+    private static float[] limit(float[] input) {
+        float UPPER_LIMIT = 255.0f;
+        float LOWER_LIMIT = 0.0f;
+        for (int i = 0; i < input.length; i++) {
+            if (input[i] > UPPER_LIMIT)
+                input[i] = UPPER_LIMIT;
+            else if (input[i] < LOWER_LIMIT)
+                input[i] = LOWER_LIMIT;
+        }
+        return input;
     }
 }

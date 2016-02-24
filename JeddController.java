@@ -54,7 +54,6 @@ public class JeddController {
                 // Set the image in the frame and model
                 frame.setImage(trimmed);
                 model.setImage(trimmed);
-                System.out.printf("%d, %d\n", trimmed.getWidth(), trimmed.getHeight());
             }
             catch (IOException e) {}
         }

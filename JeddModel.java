@@ -10,6 +10,7 @@ public class JeddModel extends Observable {
     private BufferedImage compressedImage;
     private ChromaSubsampler subsampler;
     private QuantizationTable qt;
+    private DCTMatrix dct;
 
     private PixelBlock rgbBlock;
     private PixelBlock yuvBlock;
@@ -20,6 +21,7 @@ public class JeddModel extends Observable {
     public JeddModel() {
         subsampler = new ChromaSubsampler();
         qt = new QuantizationTable();
+        dct = new DCTMatrix();
     }
 
     public void setImage(BufferedImage img) {
@@ -31,7 +33,7 @@ public class JeddModel extends Observable {
         rgbBlock = getRGBPixelBlock(x, y);
         yuvBlock = ColorConverter.RGBtoYUV(rgbBlock);
         subsampleBlock = subsampler.subsample(yuvBlock);
-        dctBlock = DCT.dct(subsampleBlock);
+        dctBlock = dct.dct(subsampleBlock, true);
         quantizedBlock = Quantizer.quantize(dctBlock, qt);
 
         setChanged();
@@ -71,35 +73,14 @@ public class JeddModel extends Observable {
             for (int j = 0; j < height; j += PixelBlock.HEIGHT) {
                 // First go one way . . .
                 PixelBlock pb = getRGBPixelBlock(i, j);
-                System.out.println("RGB");
-                System.out.print(pb);
-                System.out.println();
                 pb = ColorConverter.RGBtoYUV(pb);
-                System.out.println("YUV");
-                System.out.print(pb);
-                System.out.println();
                 pb = subsampler.subsample(pb);
-                System.out.println("Subsample");
-                System.out.print(pb);
-                System.out.println();
-                pb = DCT.dct(pb);
-                System.out.println("DCT");
-                System.out.print(pb);
-                System.out.println();
+                pb = dct.dct(pb, true);
                 pb = Quantizer.quantize(pb, qt);
-                System.out.println("Quantized");
 
-                System.out.print(pb);
-                System.out.println();
                 // . . . then undo it all.
                 pb = Quantizer.dequantize(pb, qt);
-                System.out.println("Dequantized");
-                System.out.print(pb);
-                System.out.println();
-                pb = DCT.idct(pb);
-                System.out.println("iDCT");
-                System.out.print(pb);
-                System.out.println();
+                pb = dct.dct(pb, false);
                 pb = ColorConverter.YUVtoRGB(pb);
 
                 // Paint the pixel block into the new image

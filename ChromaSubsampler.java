@@ -44,15 +44,15 @@ public class ChromaSubsampler {
     public PixelBlock subsample(PixelBlock original) {
         PixelBlock subsampled = new PixelBlock();
 
-        int[][] yChannel = original.getYChannel();
-        int[][] uChannel = original.getUChannel();
-        int[][] vChannel = original.getVChannel();
+        float[][] yChannel = original.getYChannel();
+        float[][] uChannel = original.getUChannel();
+        float[][] vChannel = original.getVChannel();
 
         // Load in the Y channel unchanged
         subsampled.setChannel(PixelBlock.Y, yChannel);
 
-        int[][] subUChannel = new int[PixelBlock.HEIGHT][PixelBlock.WIDTH];
-        int[][] subVChannel = new int[PixelBlock.HEIGHT][PixelBlock.WIDTH];
+        float[][] subUChannel = new float[PixelBlock.HEIGHT][PixelBlock.WIDTH];
+        float[][] subVChannel = new float[PixelBlock.HEIGHT][PixelBlock.WIDTH];
 
         for (int h = 0; h < PixelBlock.HEIGHT; h += PixelBlock.HEIGHT / J) {
             for (int w = 0; w < PixelBlock.WIDTH; w += J) {
@@ -62,8 +62,8 @@ public class ChromaSubsampler {
                     switch (type) {
                         case TYPE_420:
                             while (q < J) {
-                                int[] uVals = new int[4];
-                                int[] vVals = new int[4];
+                                float[] uVals = new float[4];
+                                float[] vVals = new float[4];
                                 uVals[0] = uChannel[h + p][w + q];
                                 uVals[1] = uChannel[h + p][w + q + 1];
                                 uVals[2] = uChannel[h + p + 1][w + q];
@@ -74,8 +74,8 @@ public class ChromaSubsampler {
                                 vVals[2] = vChannel[h + p + 1][w + q];
                                 vVals[3] = vChannel[h + p + 1][w + q + 1];
 
-                                int u = filter(uVals);
-                                int v = filter(vVals);
+                                float u = filter(uVals);
+                                float v = filter(vVals);
 
                                 subUChannel[h + p][w + q] = u;
                                 subUChannel[h + p][w + q + 1] = u;
@@ -102,12 +102,12 @@ public class ChromaSubsampler {
         return subsampled;
     }
 
-    private int filter(int[] vals) {
+    private float filter(float[] vals) {
         if (filter == CONSTANT_FILTER)
             return vals[0];
         else {
-            int total = 0;
-            for (int i : vals)
+            float total = 0;
+            for (float i : vals)
                 total += i;
             return total / vals.length;
         }

@@ -81,19 +81,28 @@ public class JeddController {
 
         if (command.equals(JeddFrame.CHANNEL_1_OPTION))
             model.setVisibleChannel(1);
-        if (command.equals(JeddFrame.CHANNEL_2_OPTION))
+        else if (command.equals(JeddFrame.CHANNEL_2_OPTION))
             model.setVisibleChannel(2);
-        if (command.equals(JeddFrame.CHANNEL_3_OPTION))
+        else if (command.equals(JeddFrame.CHANNEL_3_OPTION))
             model.setVisibleChannel(3);
+        else if (command.equals(JeddFrame.QT_DEFAULT_OPTION)) {
+            model.setQT(-1);
+            frame.setCompressedImage(model.getCompressedImage());
+        }
+        else if (command.equals(JeddFrame.QT_LOW_CONST_OPTION)) {
+            model.setQT(5);
+            frame.setCompressedImage(model.getCompressedImage());
+        }
+        else if (command.equals(JeddFrame.QT_HIGH_CONST_OPTION)) {
+            model.setQT(100);
+            frame.setCompressedImage(model.getCompressedImage());
+        }
             /*
     SUBSAMPLE_420_OPTION 
     SUBSAMPLE_411_OPTION 
     SUBSAMPLE_444_OPTION 
     SUBSAMPLE_440_OPTION 
     SUBSAMPLE_422_OPTION 
-    QT_DEFAULT_OPTION 
-    QT_LOW_CONST_OPTION 
-    QT_HIGH_CONST_OPTION 
     */
     }
 }

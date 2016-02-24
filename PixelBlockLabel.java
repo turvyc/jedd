@@ -47,7 +47,7 @@ public class PixelBlockLabel extends JLabel implements Observer {
     public void setPixelBlock(PixelBlock pb) {
         String text = "<html><table border='1'>";
         
-        float[][][] vals = pb.getAllChannels();
+        double[][][] vals = pb.getAllChannels();
         for (int i = 0; i < PixelBlock.WIDTH; i++) {
             text += "<tr>";
             for (int j = 0; j < PixelBlock.HEIGHT; j++) {

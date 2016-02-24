@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class JeddModel extends Observable {
+    private int x, y;
 
     private BufferedImage originalImage;
     private BufferedImage compressedImage;
@@ -21,6 +22,7 @@ public class JeddModel extends Observable {
     private int visibleChannel;
 
     public JeddModel() {
+        x = y = 0;
         subsampler = new ChromaSubsampler();
         qt = new QuantizationTable();
         dct = new DCTMatrix();
@@ -29,10 +31,13 @@ public class JeddModel extends Observable {
 
     public void setOriginalImage(BufferedImage img) {
         originalImage = img;
+        setPixelBlocks(x, y);
         compressedImage = compressImage(originalImage);
     }
 
-    public void setPixelBlocks(int x, int y) {
+    public void setPixelBlocks(int i, int j) {
+        x = i;
+        y = j;
         rgbBlock = getRGBPixelBlock(x, y);
         yuvBlock = ColorConverter.RGBtoYUV(rgbBlock);
         subsampleBlock = subsampler.subsample(yuvBlock);
@@ -92,7 +97,6 @@ public class JeddModel extends Observable {
                         PixelBlock.WIDTH);
             }
         }
-
         return compressed;
     }
 
@@ -145,5 +149,14 @@ public class JeddModel extends Observable {
         visibleChannel = c - 1;
         setChanged();
         notifyObservers();
+    }
+
+    public void setQT(int i) {
+        if (i == -1)
+            qt.setDefault();
+        else
+            qt.setConstant((double) i);
+        setPixelBlocks(x, y);
+        compressedImage = compressImage(originalImage);
     }
 }

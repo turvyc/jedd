@@ -4,22 +4,23 @@ public class Quantizer {
 
         PixelBlock quantizedBlock = new PixelBlock();
 
-        float[][] origY = input.getYChannel();
-        float[][] origU = input.getUChannel();
-        float[][] origV = input.getVChannel();
+        double[][] origY = input.getYChannel();
+        double[][] origU = input.getUChannel();
+        double[][] origV = input.getVChannel();
 
-        float[][] quantizedY = quantizedBlock.getYChannel();
-        float[][] quantizedU = quantizedBlock.getUChannel();
-        float[][] quantizedV = quantizedBlock.getVChannel();
+        double[][] quantizedY = quantizedBlock.getYChannel();
+        double[][] quantizedU = quantizedBlock.getUChannel();
+        double[][] quantizedV = quantizedBlock.getVChannel();
 
-        float[][] yTable = table.getYChannel();
-        float[][] uTable = table.getUChannel(); // Same as V channel table
+        double[][] yTable = table.getYChannel();
+        double[][] uTable = table.getUChannel(); // Same as V channel table
 
         for (int i = 0; i < PixelBlock.HEIGHT; i++) {
             for (int j = 0; j < PixelBlock.WIDTH; j++) {
-                float yVal = origY[i][j] / yTable[i][j];
-                float uVal = origU[i][j] / uTable[i][j];
-                float vVal = origV[i][j] / uTable[i][j];
+                // We have to do integer division for it to work
+                double yVal = (double)((int) origY[i][j] / (int)yTable[i][j]);
+                double uVal = (double)((int)origU[i][j] / (int)uTable[i][j]);
+                double vVal = (double)((int)origV[i][j] / (int)uTable[i][j]);
 
                 quantizedY[i][j] = yVal;
                 quantizedU[i][j] = uVal;
@@ -32,24 +33,24 @@ public class Quantizer {
 
     public static PixelBlock dequantize(PixelBlock input, QuantizationTable table) {
 
-        float[][] origY = input.getYChannel();
-        float[][] origU = input.getUChannel();
-        float[][] origV = input.getVChannel();
+        double[][] origY = input.getYChannel();
+        double[][] origU = input.getUChannel();
+        double[][] origV = input.getVChannel();
 
         PixelBlock dequantizedBlock = new PixelBlock();
 
-        float[][] dequantizedY = dequantizedBlock.getYChannel();
-        float[][] dequantizedU = dequantizedBlock.getUChannel();
-        float[][] dequantizedV = dequantizedBlock.getVChannel();
+        double[][] dequantizedY = dequantizedBlock.getYChannel();
+        double[][] dequantizedU = dequantizedBlock.getUChannel();
+        double[][] dequantizedV = dequantizedBlock.getVChannel();
 
-        float[][] yTable = table.getYChannel();
-        float[][] uTable = table.getUChannel(); // Same as V channel table
+        double[][] yTable = table.getYChannel();
+        double[][] uTable = table.getUChannel(); // Same as V channel table
 
         for (int i = 0; i < PixelBlock.HEIGHT; i++) {
             for (int j = 0; j < PixelBlock.WIDTH; j++) {
-                float yVal = origY[i][j] * yTable[i][j];
-                float uVal = origU[i][j] * uTable[i][j];
-                float vVal = origV[i][j] * uTable[i][j];
+                double yVal = origY[i][j] * yTable[i][j];
+                double uVal = origU[i][j] * uTable[i][j];
+                double vVal = origV[i][j] * uTable[i][j];
 
                 dequantizedY[i][j] = yVal;
                 dequantizedU[i][j] = uVal;

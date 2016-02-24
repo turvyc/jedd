@@ -92,5 +92,16 @@ public class PixelBlock {
         }
     }
 
+    public String toString() {
+        String s = "";
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                s += String.format("%-5d", channel1[i][j]); 
+            }
+            s += String.format("\n");
+        }
+
+        return s;
+    }
 }
 

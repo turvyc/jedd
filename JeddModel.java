@@ -24,7 +24,7 @@ public class JeddModel extends Observable {
         dct = new DCTMatrix();
     }
 
-    public void setImage(BufferedImage img) {
+    public void setOriginalImage(BufferedImage img) {
         originalImage = img;
         compressedImage = compressImage(originalImage);
     }
@@ -126,8 +126,12 @@ public class JeddModel extends Observable {
         return originalImage.getHeight();
     }
 
-    public BufferedImage getImage() {
+    public BufferedImage getOriginalImage() {
         return originalImage;
+    }
+
+    public BufferedImage getCompressedImage() {
+        return compressedImage;
     }
 
 }

@@ -34,11 +34,13 @@ public class JeddFrame extends JFrame {
     private JeddMouseListener mouseListener;
 
     private BufferedImage originalImage;
-    private JLabel imageLabel;
+    private BufferedImage compressedImage;
+    private JLabel originalImageLabel;
+    private JLabel compressedImageLabel;
 
     private JPanel originalImagePanel;
     private JPanel pixelBlocksPanel;
-    private JPanel newImagePanel;
+    private JPanel compressedImagePanel;
 
     private PixelBlockLabel rgbLabel;
     private PixelBlockLabel yuvLabel;
@@ -58,10 +60,12 @@ public class JeddFrame extends JFrame {
 
         originalImagePanel = createOriginalImagePanel();
         pixelBlocksPanel = createPixelBlocksPanel();
+        compressedImagePanel = createCompressedImagePanel();
         JPanel masterPanel = new JPanel();
 
         masterPanel.add(originalImagePanel);
         masterPanel.add(pixelBlocksPanel);
+        masterPanel.add(compressedImagePanel);
 
         add(masterPanel);
     }
@@ -70,11 +74,17 @@ public class JeddFrame extends JFrame {
         controller = c;
     }
 
-    public void setImage(BufferedImage image) {
+    public void setOriginalImage(BufferedImage image) {
         originalImage = image;
         ImageIcon icon = new ImageIcon(image);
-        imageLabel.setIcon(icon);
-        imageLabel.addMouseListener(mouseListener);
+        originalImageLabel.setIcon(icon);
+        originalImageLabel.addMouseListener(mouseListener);
+    }
+
+    public void setCompressedImage(BufferedImage image) {
+        compressedImage = image;
+        ImageIcon icon = new ImageIcon(image);
+        compressedImageLabel.setIcon(icon);
     }
 
     /**
@@ -97,25 +107,30 @@ public class JeddFrame extends JFrame {
         g2.dispose();
 
         // Set the icon
-        imageLabel.setIcon(new ImageIcon(clone));
+        originalImageLabel.setIcon(new ImageIcon(clone));
     }
     
-    public void updateRGBLabel(PixelBlock pb) {
-        rgbLabel.setPixelBlock(pb);
-    }
-
     private JPanel createOriginalImagePanel() {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(
                     new EtchedBorder(), "Original Image"));
-        imageLabel = new JLabel();
+        originalImageLabel = new JLabel();
 
         JButton openImageButton = new JButton(OPEN_BUTTON);
 
         openImageButton.addActionListener(actionListener);
 
-        panel.add(imageLabel);
+        panel.add(originalImageLabel);
         panel.add(openImageButton);
+        return panel;
+    }
+
+    private JPanel createCompressedImagePanel() {
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createTitledBorder(
+                    new EtchedBorder(), "Compressed Image"));
+        compressedImageLabel = new JLabel();
+        panel.add(compressedImageLabel);
         return panel;
     }
 

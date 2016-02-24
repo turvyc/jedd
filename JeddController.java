@@ -51,9 +51,11 @@ public class JeddController {
                 // Trim pixels off the bottom so it is a nice multiple of 8
                 int trimSize = buff.getHeight() % PixelBlock.HEIGHT;
                 BufferedImage trimmed = buff.getSubimage(0, 0, buff.getWidth(), buff.getHeight() - trimSize);
+
                 // Set the image in the frame and model
-                frame.setImage(trimmed);
-                model.setImage(trimmed);
+                frame.setOriginalImage(trimmed);
+                model.setOriginalImage(trimmed);
+                frame.setCompressedImage(model.getCompressedImage());
             }
             catch (IOException e) {}
         }

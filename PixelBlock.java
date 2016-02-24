@@ -50,10 +50,12 @@ public class PixelBlock {
     public int[] getRgbArray() {
         int[] rgb = new int[HEIGHT * WIDTH];
 
+        int n = 0;
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 Color c = new Color((int)channel1[i][j], (int)channel2[i][j], (int)channel3[i][j]);
-                rgb[i + j] = c.getRGB();
+                rgb[n] = c.getRGB();
+                n++;
             }
         }
         
